@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Admins | Ã‰lectro-Actu</title>
+    
+    <link rel="icon" type="image/png" href="/images/logo.png">
+    <link rel="stylesheet" href="admin-styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="nav-header">
+        <div class="nav-container">
+            <div class="nav-content">
+                <div class="nav-logo" onclick="window.location.href='admin.html'">
+                    <img src="/images/logo.png" alt="Ã‰lectro-Actu Logo" class="nav-logo-img">
+                    <span class="logo-text">GESTION ADMINS</span>
+                </div>
+                <div class="nav-actions">
+                    <a href="admin.html" class="btn-secondary">
+                        <i class="fas fa-arrow-left mr-1"></i>Retour Admin
+                    </a>
+                    <button id="logoutBtn" class="btn-danger">
+                        <i class="fas fa-sign-out-alt mr-1"></i>DÃ©connexion
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Section de connexion -->
+    <div id="loginSection" class="login-section">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <i class="fas fa-shield-alt login-icon"></i>
+                    <h2 class="login-title">AccÃ¨s Super Admin</h2>
+                    <p class="login-subtitle">Connexion requise</p>
+                </div>
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" id="loginEmail" required class="form-input" placeholder="admin@electro-actu.fr">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Mot de passe</label>
+                        <input type="password" id="loginPassword" required class="form-input" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢">
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">
+                        <i class="fas fa-sign-in-alt mr-1"></i>Se connecter
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Gestion Admins -->
+    <div id="adminDashboard" class="dashboard hidden">
+        <div class="dashboard-container">
+            
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">
+                    <i class="fas fa-users-cog mr-2"></i>Gestion des Administrateurs
+                </h1>
+                <p style="color: var(--secondary); margin-top: 0.5rem;">
+                    âš ï¸ Attention : Seul un super admin peut accÃ©der Ã  cette page
+                </p>
+            </div>
+
+            <!-- Statistiques -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Total Utilisateurs</p>
+                        <p class="stat-value" id="totalUsers">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Administrateurs</p>
+                        <p class="stat-value" id="totalAdmins">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <p class="stat-label">Utilisateurs Actifs</p>
+                        <p class="stat-value" id="activeUsers">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Liste des utilisateurs -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-list mr-2"></i>Liste des Utilisateurs
+                    </h2>
+                </div>
+                <div class="card-body">
+                    
+                    <!-- Filtre -->
+                    <div style="margin-bottom: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <select id="roleFilter" class="form-input" style="max-width: 200px;">
+                            <option value="all">Tous les rÃ´les</option>
+                            <option value="admin">Admins seulement</option>
+                            <option value="user">Utilisateurs seulement</option>
+                        </select>
+                        <input type="text" id="searchUser" class="form-input" placeholder="Rechercher par email..." style="flex: 1; max-width: 400px;">
+                    </div>
+
+                    <div id="usersList" class="users-list">
+                        <div class="loading-container">
+                            <i class="fas fa-spinner fa-spin loading-icon"></i>
+                            <p class="loading-text">Chargement...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAlBDedWLbHG-3UnijsSfocm77sNpn15Wg",
+            authDomain: "electroactu-b6050.firebaseapp.com",
+            projectId: "electroactu-b6050",
+            storageBucket: "electroactu-b6050.firebasestorage.app",
+            messagingSenderId: "890343912768",
+            appId: "1:890343912768:web:87de595f6df3c3f434f6a5"
+        };
+
+        // Initialisation Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        let currentUser = null;
+        let allUsers = [];
+
+        // Ã‰lÃ©ments DOM
+        const loginSection = document.getElementById('loginSection');
+        const adminDashboard = document.getElementById('adminDashboard');
+        const loginForm = document.getElementById('loginForm');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const usersList = document.getElementById('usersList');
+        const roleFilter = document.getElementById('roleFilter');
+        const searchUser = document.getElementById('searchUser');
+
+        // Gestion de l'authentification
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                // VÃ©rifier si l'utilisateur est admin
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                
+                if (userDoc.exists && userDoc.data().role === 'admin') {
+                    currentUser = user;
+                    loginSection.classList.add('hidden');
+                    adminDashboard.classList.remove('hidden');
+                    loadUsers();
+                } else {
+                    showNotification('AccÃ¨s refusÃ©. Vous n\'Ãªtes pas administrateur.', 'error');
+                    auth.signOut();
+                }
+            } else {
+                loginSection.classList.remove('hidden');
+                adminDashboard.classList.add('hidden');
+            }
+        });
+
+        // Connexion
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                showNotification('Connexion rÃ©ussie !', 'success');
+            } catch (error) {
+                console.error('Erreur:', error);
+                showNotification('Erreur de connexion: ' + error.message, 'error');
+            }
+        });
+
+        // DÃ©connexion
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await auth.signOut();
+                showNotification('DÃ©connexion rÃ©ussie', 'success');
+            } catch (error) {
+                console.error('Erreur:', error);
+                showNotification('Erreur lors de la dÃ©connexion', 'error');
+            }
+        });
+
+        // Charger tous les utilisateurs
+        async function loadUsers() {
+            usersList.innerHTML = `
+                <div class="loading-container">
+                    <i class="fas fa-spinner fa-spin loading-icon"></i>
+                    <p class="loading-text">Chargement...</p>
+                </div>
+            `;
+
+            try {
+                const snapshot = await db.collection('users').get();
+                
+                allUsers = [];
+                snapshot.forEach(doc => {
+                    allUsers.push({ id: doc.id, ...doc.data() });
+                });
+
+                updateStats();
+                displayUsers(allUsers);
+
+            } catch (error) {
+                console.error('Erreur:', error);
+                usersList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p style="color: #dc2626;">Erreur lors du chargement</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Mettre Ã  jour les statistiques
+        function updateStats() {
+            const admins = allUsers.filter(u => u.role === 'admin');
+            
+            document.getElementById('totalUsers').textContent = allUsers.length;
+            document.getElementById('totalAdmins').textContent = admins.length;
+            document.getElementById('activeUsers').textContent = allUsers.length - admins.length;
+        }
+
+        // Afficher les utilisateurs
+        function displayUsers(users) {
+            if (users.length === 0) {
+                usersList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <p>Aucun utilisateur trouvÃ©</p>
+                    </div>
+                `;
+                return;
+            }
+
+            usersList.innerHTML = '';
+
+            users.forEach(user => {
+                const userCard = createUserCard(user);
+                usersList.appendChild(userCard);
+            });
+        }
+
+        // CrÃ©er une carte utilisateur
+        function createUserCard(user) {
+            const div = document.createElement('div');
+            div.className = 'user-item';
+            
+            const isAdmin = user.role === 'admin';
+            const roleClass = isAdmin ? 'admin-badge' : 'user-badge';
+            const roleText = isAdmin ? 'Admin' : 'Utilisateur';
+            
+            const joinDate = user.createdAt 
+                ? new Date(user.createdAt.toDate()).toLocaleDateString('fr-FR')
+                : 'Date inconnue';
+
+            div.innerHTML = `
+                <div class="user-info">
+                    <div class="user-avatar">
+                        ${user.photoURL 
+                            ? `<img src="${user.photoURL}" alt="${user.name}">`
+                            : `<i class="fas fa-user"></i>`
+                        }
+                    </div>
+                    <div class="user-details">
+                        <h3 class="user-name">${escapeHtml(user.name || 'Sans nom')}</h3>
+                        <p class="user-email">${escapeHtml(user.email)}</p>
+                        <p class="user-date">Inscrit le ${joinDate}</p>
+                    </div>
+                </div>
+                <div class="user-actions">
+                    <span class="${roleClass}">${roleText}</span>
+                    ${!isAdmin 
+                        ? `<button class="btn-promote" onclick="promoteToAdmin('${user.id}', '${escapeHtml(user.email)}')">
+                            <i class="fas fa-arrow-up mr-1"></i>Promouvoir Admin
+                        </button>`
+                        : `<button class="btn-demote" onclick="demoteFromAdmin('${user.id}', '${escapeHtml(user.email)}')">
+                            <i class="fas fa-arrow-down mr-1"></i>Retirer Admin
+                        </button>`
+                    }
+                </div>
+            `;
+
+            return div;
+        }
+
+        // Promouvoir en admin
+        async function promoteToAdmin(userId, userEmail) {
+            if (!confirm(`Voulez-vous vraiment promouvoir "${userEmail}" en administrateur ?`)) {
+                return;
+            }
+
+            try {
+                await db.collection('users').doc(userId).update({
+                    role: 'admin'
+                });
+
+                showNotification('Utilisateur promu en admin avec succÃ¨s !', 'success');
+                loadUsers();
+
+            } catch (error) {
+                console.error('Erreur:', error);
+                showNotification('Erreur lors de la promotion: ' + error.message, 'error');
+            }
+        }
+
+        // Retirer le rÃ´le admin
+        async function demoteFromAdmin(userId, userEmail) {
+            // EmpÃªcher de se retirer soi-mÃªme
+            if (userId === currentUser.uid) {
+                showNotification('Vous ne pouvez pas retirer votre propre rÃ´le admin !', 'error');
+                return;
+            }
+
+            if (!confirm(`Voulez-vous vraiment retirer le rÃ´le admin de "${userEmail}" ?`)) {
+                return;
+            }
+
+            try {
+                await db.collection('users').doc(userId).update({
+                    role: 'user'
+                });
+
+                showNotification('RÃ´le admin retirÃ© avec succÃ¨s !', 'success');
+                loadUsers();
+
+            } catch (error) {
+                console.error('Erreur:', error);
+                showNotification('Erreur: ' + error.message, 'error');
+            }
+        }
+
+        // Filtrer les utilisateurs
+        roleFilter.addEventListener('change', filterUsers);
+        searchUser.addEventListener('input', filterUsers);
+
+        function filterUsers() {
+            const roleValue = roleFilter.value;
+            const searchValue = searchUser.value.toLowerCase();
+
+            let filtered = allUsers;
+
+            // Filtre par rÃ´le
+            if (roleValue !== 'all') {
+                filtered = filtered.filter(u => u.role === roleValue);
+            }
+
+            // Filtre par recherche
+            if (searchValue) {
+                filtered = filtered.filter(u => 
+                    u.email.toLowerCase().includes(searchValue) ||
+                    (u.name && u.name.toLowerCase().includes(searchValue))
+                );
+            }
+
+            displayUsers(filtered);
+        }
+
+        // Fonction de notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 5rem;
+                right: 1rem;
+                background-color: ${type === 'success' ? '#16a34a' : type === 'error' ? '#dc2626' : '#3b82f6'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 0.5rem;
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+                animation: slideIn 0.3s ease-out;
+                max-width: 20rem;
+            `;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    <span>${escapeHtml(message)}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+
+            .users-list {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .user-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1.5rem;
+                background: var(--light);
+                border-radius: 0.75rem;
+                border: 2px solid transparent;
+                transition: all 0.3s;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .user-item:hover {
+                border-color: var(--primary);
+                background: white;
+                box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+            }
+
+            .user-info {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                flex: 1;
+            }
+
+            .user-avatar {
+                width: 3.5rem;
+                height: 3.5rem;
+                border-radius: 50%;
+                background: var(--primary);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5rem;
+                overflow: hidden;
+                flex-shrink: 0;
+            }
+
+            .user-avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .user-details {
+                flex: 1;
+            }
+
+            .user-name {
+                font-size: 1.125rem;
+                font-weight: 700;
+                color: var(--dark);
+                margin: 0;
+            }
+
+            .user-email {
+                font-size: 0.875rem;
+                color: var(--secondary);
+                margin: 0.25rem 0 0;
+            }
+
+            .user-date {
+                font-size: 0.75rem;
+                color: var(--secondary);
+                margin: 0.25rem 0 0;
+            }
+
+            .user-actions {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .admin-badge,
+            .user-badge {
+                padding: 0.5rem 1rem;
+                border-radius: 1rem;
+                font-size: 0.875rem;
+                font-weight: 600;
+            }
+
+            .admin-badge {
+                background: linear-gradient(135deg, #a855f7, #9333ea);
+                color: white;
+            }
+
+            .user-badge {
+                background: var(--light);
+                color: var(--secondary);
+                border: 1px solid #cbd5e1;
+            }
+
+            .btn-promote,
+            .btn-demote {
+                padding: 0.625rem 1.25rem;
+                border: none;
+                border-radius: 0.5rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s;
+                display: flex;
+                align-items: center;
+                font-size: 0.875rem;
+            }
+
+            .btn-promote {
+                background: var(--success);
+                color: white;
+            }
+
+            .btn-promote:hover {
+                background: #15803d;
+                transform: translateY(-2px);
+            }
+
+            .btn-demote {
+                background: var(--danger);
+                color: white;
+            }
+
+            .btn-demote:hover {
+                background: #b91c1c;
+                transform: translateY(-2px);
+            }
+
+            @media (max-width: 768px) {
+                .user-item {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+
+                .user-actions {
+                    width: 100%;
+                    justify-content: space-between;
+                }
+
+                .btn-promote,
+                .btn-demote {
+                    flex: 1;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
