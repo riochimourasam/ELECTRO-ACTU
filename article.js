@@ -976,32 +976,87 @@ function loadTheme() {
 // ============================================
 
 function updatePageMeta(article) {
+    // Mettre à jour le titre de la page
     document.title = `${article.title || 'Article'} | Électro-Actu`;
     
-    updateMetaTag('og:title', article.title);
-    updateMetaTag('og:description', article.summary);
-    updateMetaTag('og:image', article.imageUrl);
-    updateMetaTag('og:url', window.location.href);
+    // Mettre à jour la description meta
+    updateMetaTag('description', article.summary, 'name');
     
-    updateMetaTag('twitter:title', article.title);
-    updateMetaTag('twitter:description', article.summary);
-    updateMetaTag('twitter:image', article.imageUrl);
+    // Open Graph
+    updateMetaTag('og:title', article.title, 'property');
+    updateMetaTag('og:description', article.summary, 'property');
+    updateMetaTag('og:image', article.imageUrl || 'https://electroinfo.online/images/logo.png', 'property');
+    updateMetaTag('og:url', window.location.href, 'property');
+    updateMetaTag('og:type', 'article', 'property');
+    updateMetaTag('og:site_name', 'Électro-Actu', 'property');
+    
+    // Twitter Card
+    updateMetaTag('twitter:card', 'summary_large_image', 'name');
+    updateMetaTag('twitter:title', article.title, 'name');
+    updateMetaTag('twitter:description', article.summary, 'name');
+    updateMetaTag('twitter:image', article.imageUrl || 'https://electroinfo.online/images/logo.png', 'name');
+    
+    // Ajouter les données structurées JSON-LD pour un meilleur SEO
+    updateStructuredData(article);
 }
 
-function updateMetaTag(property, content) {
+function updateMetaTag(property, content, attributeType = 'property') {
     if (!content) return;
     
-    let meta = document.querySelector(`meta[property="${property}"]`) || 
-               document.querySelector(`meta[name="${property}"]`);
+    // Chercher la balise existante
+    let meta = document.querySelector(`meta[${attributeType}="${property}"]`);
     
     if (meta) {
+        // Mettre à jour le contenu existant
         meta.setAttribute('content', content);
     } else {
+        // Créer une nouvelle balise
         meta = document.createElement('meta');
-        meta.setAttribute(property.includes(':') ? 'property' : 'name', property);
+        meta.setAttribute(attributeType, property);
         meta.setAttribute('content', content);
         document.head.appendChild(meta);
     }
+}
+
+function updateStructuredData(article) {
+    // Supprimer l'ancien script JSON-LD s'il existe
+    const oldScript = document.querySelector('script[type="application/ld+json"]');
+    if (oldScript) {
+        oldScript.remove();
+    }
+    
+    // Créer les données structurées
+    const structuredData = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": article.title,
+        "description": article.summary,
+        "image": article.imageUrl || "https://electroinfo.online/images/logo.png",
+        "datePublished": article.createdAt?.toDate?.()?.toISOString() || new Date().toISOString(),
+        "author": {
+            "@type": "Person",
+            "name": "Enoch",
+            "jobTitle": "Expert en Électricité Industrielle"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Électro-Actu",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://electroinfo.online/images/logo.png"
+            }
+        },
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": window.location.href
+        }
+    };
+    
+    // Ajouter le script au head
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.textContent = JSON.stringify(structuredData);
+    document.head.appendChild(script);
 }
 
 // ============================================
