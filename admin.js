@@ -289,6 +289,9 @@ function createArticleItem(id, article) {
             </p>
         </div>
         <div class="article-actions">
+            <button class="btn btn-sm btn-success" onclick="generateSharePage('${id}')">
+                <i class="fas fa-share-alt"></i> Page Partage
+            </button>
             <button class="btn btn-sm btn-primary" onclick="editArticle('${id}')">
                 <i class="fas fa-edit"></i> Modifier
             </button>
@@ -478,6 +481,112 @@ window.exportNewsletterCSV = async function() {
     } catch (error) {
         console.error('Erreur export:', error);
         showNotification('Erreur lors de l\'export', 'error');
+    }
+};
+
+// ============================================
+// GÉNÉRATION PAGE DE PARTAGE
+// ============================================
+window.generateSharePage = async function(articleId) {
+    try {
+        showNotification('🔄 Génération de la page de partage...', 'info');
+        
+        const articleDoc = await getDoc(doc(db, 'articles', articleId));
+        
+        if (!articleDoc.exists()) {
+            showNotification('❌ Article introuvable', 'error');
+            return;
+        }
+        
+        const article = articleDoc.data();
+        const slug = article.slug || articleId;
+        const title = escapeHtml(article.title || 'Article');
+        const description = escapeHtml(article.summary || 'Découvrez cet article sur Électro-Actu');
+        const imageUrl = escapeHtml(article.imageUrl || 'https://electroinfo.online/images/logo.png');
+        const shareUrl = `https://electroinfo.online/share/${slug}.html`;
+        
+        // Générer le HTML de la page de partage
+        const html = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>${title} | Électro-Actu</title>
+    <meta name="description" content="${description}">
+    
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    
+    <!-- Open Graph / Facebook / LinkedIn / WhatsApp -->
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Électro-Actu">
+    <meta property="og:title" content="${title}">
+    <meta property="og:description" content="${description}">
+    <meta property="og:image" content="${imageUrl}">
+    <meta property="og:image:secure_url" content="${imageUrl}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="${shareUrl}">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="${title}">
+    <meta name="twitter:description" content="${description}">
+    <meta name="twitter:image" content="${imageUrl}">
+    
+    <!-- Redirection -->
+    <meta http-equiv="refresh" content="0;url=/article.html?id=${articleId}">
+    <script>window.location.href="/article.html?id=${articleId}";</script>
+    
+    <style>
+        body{font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#667eea,#764ba2);color:white;text-align:center;padding:2rem}
+        .spinner{border:4px solid rgba(255,255,255,.3);border-radius:50%;border-top:4px solid white;width:60px;height:60px;animation:spin 1s linear infinite;margin:0 auto 2rem}
+        @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+        h1{font-size:1.75rem;margin-bottom:1rem}
+    </style>
+</head>
+<body>
+    <div><div class="spinner"></div><h1>${title}</h1><p>Chargement...</p></div>
+</body>
+</html>`;
+        
+        // Télécharger le fichier
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${slug}.html`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        // Instructions
+        const instructions = `✅ PAGE DE PARTAGE GÉNÉRÉE !
+
+📁 Fichier téléchargé : ${slug}.html
+
+📤 ÉTAPES SUIVANTES :
+1. Créez un dossier "share" dans votre projet Firebase
+2. Copiez le fichier ${slug}.html dans ce dossier
+3. Déployez : firebase deploy --only hosting
+
+🔗 URL À PARTAGER :
+${shareUrl}
+
+💡 Cette URL affichera l'image de couverture sur WhatsApp/Facebook !`;
+        
+        // Copier l'URL
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(shareUrl).catch(() => {});
+        }
+        
+        showNotification('✅ Fichier téléchargé !', 'success');
+        alert(instructions);
+        
+    } catch (error) {
+        console.error('Erreur:', error);
+        showNotification('❌ Erreur lors de la génération', 'error');
     }
 };
 
