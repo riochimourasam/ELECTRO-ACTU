@@ -8,8 +8,8 @@
     ],
     "rewrites": [
       {
-        "source": "/article/*",
-        "function": "articleMetadata"
+        "source": "/article/**",
+        "destination": "/article.html"
       }
     ],
     "cleanUrls": true,
@@ -22,10 +22,16 @@
             "value": "max-age=31536000"
           }
         ]
+      },
+      {
+        "source": "**/*.@(js|css)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=604800"
+          }
+        ]
       }
     ]
-  },
-  "functions": {
-    "source": "functions"
   }
 }
