@@ -174,15 +174,16 @@ function initQuillEditor() {
 articleForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    try {
-        const title = document.getElementById('title').value.trim();
-        const category = document.getElementById('category').value;
-        const imageUrl = document.getElementById('imageUrl').value.trim();
-        const summary = document.getElementById('summary').value.trim();
-        const content = quillEditor.root.innerHTML;
-        const featured = document.getElementById('featured').checked;
-        const tags = document.getElementById('tags').value.split(',').map(t => t.trim()).filter(t => t);
+    const content = quillEditor.root.innerHTML;
+    
+    // Vérification de sécurité manuelle puisque le "required" HTML est enlevé
+    if (quillEditor.getText().trim().length === 0) {
+        showNotification('❌ Le contenu de l\'article ne peut pas être vide', 'error');
+        return;
+    }
 
+    try {
+        // ... la suite de votre code actuel ...
         // 🆕 GÉNÉRER LE SLUG
         const slug = await generateUniqueSlug(title, editMode ? currentEditId : null);
 
