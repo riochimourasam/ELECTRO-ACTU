@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion | Électro-Actu</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Électro-Actu | Actualité Électrique</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon.ico">
+<link rel="icon" type="image/png" sizes="48x48" href="images/logo-small.png">
+
+<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+
+<link rel="icon" type="image/png" sizes="512x512" href="images/logo.png">
+
+<meta name="description" content="Électro-Actu : Votre source d'actualités en électricité industrielle. Innovations, sécurité, tutoriels et nouveautés du secteur électrique.">
+
+<meta property="og:title" content="Électro-Actu | Actualité Électrique">
+<meta property="og:description" content="Découvrez les dernières innovations en électricité industrielle">
+<meta property="og:image" content="https://electroinfo.online/images/logo.png">
+<meta property="og:url" content="https://electroinfo.online">
+<meta property="og:type" content="website">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Électro-Actu | Actualité Électrique">
+<meta name="twitter:description" content="Découvrez les dernières innovations en électricité industrielle">
+<meta name="twitter:image" content="https://electroinfo.online/images/logo.png">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="auth-page">
+    <!-- Navigation Simple -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i class="fas fa-bolt"></i>
+                <span>ÉLECTRO-ACTU</span>
+            </div>
+            <a href="index.html" class="btn btn-outline">
+                <i class="fas fa-home"></i> Accueil
+            </a>
+        </div>
+    </nav>
+
+    <!-- Auth Container -->
+    <div class="auth-container">
+        <div class="auth-card">
+            <!-- Tabs -->
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">
+                    <i class="fas fa-sign-in-alt"></i> Connexion
+                </button>
+                <button class="auth-tab" data-tab="register">
+                    <i class="fas fa-user-plus"></i> Inscription
+                </button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginTab" class="auth-form active">
+                <div class="auth-header">
+                    <i class="fas fa-user-circle auth-icon"></i>
+                    <h2>Bon retour !</h2>
+                    <p>Connectez-vous pour continuer</p>
+                </div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="loginEmail" required class="input" placeholder="votre@email.fr">
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Mot de passe</label>
+                        <div class="input-group">
+                            <input type="password" id="loginPassword" required class="input" placeholder="••••••••">
+                            <button type="button" class="input-icon" onclick="togglePassword('loginPassword', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox">
+                            <input type="checkbox" id="rememberMe">
+                            <span>Se souvenir de moi</span>
+                        </label>
+                        <a href="#" class="link" onclick="showForgotPassword()">Mot de passe oublié ?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-sign-in-alt"></i> Se connecter
+                    </button>
+                </form>
+
+                <div class="divider">OU</div>
+
+                <button class="btn btn-google btn-block" onclick="signInWithGoogle()">
+                    <i class="fab fa-google"></i> Continuer avec Google
+                </button>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerTab" class="auth-form">
+                <div class="auth-header">
+                    <i class="fas fa-user-plus auth-icon"></i>
+                    <h2>Créer un compte</h2>
+                    <p>Rejoignez la communauté Électro-Actu</p>
+                </div>
+
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Nom complet</label>
+                        <input type="text" id="registerName" required class="input" placeholder="Jean Dupont">
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="registerEmail" required class="input" placeholder="votre@email.fr">
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Mot de passe</label>
+                        <div class="input-group">
+                            <input type="password" id="registerPassword" required class="input" placeholder="••••••••" minlength="6">
+                            <button type="button" class="input-icon" onclick="togglePassword('registerPassword', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div id="passwordStrength" class="password-strength"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Confirmer le mot de passe</label>
+                        <div class="input-group">
+                            <input type="password" id="confirmPassword" required class="input" placeholder="••••••••" minlength="6">
+                            <button type="button" class="input-icon" onclick="togglePassword('confirmPassword', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <label class="checkbox">
+                        <input type="checkbox" id="acceptTerms" required>
+                        <span>J'accepte les <a href="#" class="link">conditions d'utilisation</a></span>
+                    </label>
+
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-user-plus"></i> Créer mon compte
+                    </button>
+                </form>
+
+                <div class="divider">OU</div>
+
+                <button class="btn btn-google btn-block" onclick="signInWithGoogle()">
+                    <i class="fab fa-google"></i> S'inscrire avec Google
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal" class="modal hidden">
+        <div class="modal-overlay" onclick="closeForgotPassword()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeForgotPassword()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-body">
+                <i class="fas fa-key modal-icon"></i>
+                <h2>Mot de passe oublié ?</h2>
+                <p>Entrez votre email pour recevoir un lien de réinitialisation.</p>
+                <form id="forgotPasswordForm">
+                    <input type="email" id="resetEmail" required class="input" placeholder="votre@email.fr">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-paper-plane"></i> Envoyer le lien
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification" class="notification hidden"></div>
+
+    <!-- Firebase v9 Modular -->
+    <script type="module" src="auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <!-- Encodage et viewport -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Titre et description -->
+    <title>Article | Électro-Actu</title>
+    <meta name="description" content="Électro-Actu : Votre source d'actualités en électricité industrielle. Innovations, sécurité, tutoriels et nouveautés du secteur électrique.">
+    
+   <!-- Favicons -->
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<link rel="icon" type="image/png" sizes="48x48" href="/images/logo-small.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/images/logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    <!-- Open Graph (Facebook, LinkedIn) -->
+    <meta property="og:title" content="Électro-Actu | Actualité Électrique">
+    <meta property="og:description" content="Découvrez les dernières innovations en électricité industrielle">
+    <meta property="og:image" content="https://electroinfo.online/images/logo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://electroinfo.online">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Électro-Actu">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Électro-Actu | Actualité Électrique">
+    <meta name="twitter:description" content="Découvrez les dernières innovations en électricité industrielle">
+    <meta name="twitter:image" content="https://electroinfo.online/images/logo.png">
+    <meta name="twitter:site" content="@ElectroActu">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="article-styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body id="top">
+
+    <!-- Theme Toggle Button -->
+    <button id="themeToggle" class="theme-toggle" title="Basculer le thème">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Navigation -->
+   <nav class="nav-header">
+    <div class="nav-container">
+        <div class="nav-content">
+            <div class="nav-logo" onclick="window.location.href='index.html'">
+                <img src="images/logo-small.png" alt="Électro-Actu" class="logo-image">
+                <span class="logo-text">ÉLECTRO-ACTU</span>
+            </div>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-home mr-1"></i>Accueil
+                    </a>
+                    <a href="index.html#nouveautes" class="nav-link">Nouveautés</a>
+                    <a href="index.html#innovations" class="nav-link">Innovations</a>
+                    <a href="index.html#securite" class="nav-link">Sécurité</a>
+                </div>
+                <div class="nav-actions">
+                    <button id="newsletterBtn" class="btn-newsletter" onclick="openNewsletterModal()">
+                        <i class="fas fa-envelope mr-1"></i>Newsletter
+                    </button>
+                    <a href="auth.html" class="btn-admin">
+                        <i class="fas fa-user-shield mr-1"></i>Connexion
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="loading-state">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Chargement de l'article...</p>
+        </div>
+    </div>
+
+    <!-- Article Container -->
+    <article id="articleContainer" class="article-container hidden">
+        
+        <!-- Article Header with Image -->
+        <div class="article-hero">
+            <img id="articleImage" src="" alt="" class="article-hero-image">
+            <div class="article-hero-overlay">
+                <div class="article-hero-content">
+                    <span id="articleCategory" class="article-category-badge"></span>
+                    <h1 id="articleTitle" class="article-hero-title"></h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- Article Content -->
+        <div class="article-content-wrapper">
+            <div class="article-main">
+                
+                <!-- Article Meta Info -->
+                <div class="article-meta-bar">
+                    <div class="article-author-section">
+                        <div class="author-avatar">JD</div>
+                        <div class="author-info">
+                            <p class="author-name"> Enoch</p>
+                            <p class="author-role">Expert en Électricité Industrielle</p>
+                        </div>
+                    </div>
+                    <div class="article-stats-section">
+                        <span class="article-stat">
+                            <i class="far fa-calendar"></i>
+                            <span id="articleDate"></span>
+                        </span>
+                        <span class="article-stat">
+                            <i class="far fa-clock"></i>
+                            <span id="articleReadTime"></span>
+                        </span>
+                        <span class="article-stat">
+                            <i class="far fa-eye"></i>
+                            <span id="articleViews">0</span> vues
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Social Share & Reactions -->
+                <div class="article-actions-bar">
+                    <div class="reactions-container">
+                        <button class="reaction-btn" data-reaction="like" id="likeBtn">
+                            <i class="far fa-thumbs-up"></i>
+                            <span id="likeCount">0</span>
+                        </button>
+                        <button class="reaction-btn" data-reaction="love" id="loveBtn">
+                            <i class="far fa-heart"></i>
+                            <span id="loveCount">0</span>
+                        </button>
+                        <button class="reaction-btn" data-reaction="star" id="starBtn">
+                            <i class="far fa-star"></i>
+                            <span id="starCount">0</span>
+                        </button>
+                    </div>
+                    <div class="share-buttons">
+                        <button class="share-btn" onclick="shareArticle('facebook')" title="Partager sur Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+                        <button class="share-btn" onclick="shareArticle('twitter')" title="Partager sur Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </button>
+                        <button class="share-btn" onclick="shareArticle('linkedin')" title="Partager sur LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </button>
+                        <button class="share-btn" onclick="shareArticle('whatsapp')" title="Partager sur WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
+                        <button class="share-btn" onclick="copyArticleLink()" title="Copier le lien">
+                            <i class="fas fa-link"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Article Summary -->
+                <div class="article-summary-box">
+                    <h2 class="summary-title">Résumé</h2>
+                    <p id="articleSummary" class="summary-text"></p>
+                </div>
+
+                <!-- Article Body -->
+                <div id="articleBody" class="article-body"></div>
+
+                <!-- Expert Note -->
+                <div class="expert-note">
+                    <div class="expert-note-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div class="expert-note-content">
+                        <h4 class="expert-note-title">Note de l'expert</h4>
+                        <p class="expert-note-text">"Note..."</p>
+                    </div>
+                </div>
+
+                <!-- Tags -->
+                <div id="articleTags" class="article-tags-section"></div>
+
+                <!-- Comments Section -->
+                <div class="comments-section" id="comments">
+                    <h3 class="comments-title">
+                        <i class="fas fa-comments mr-2"></i>
+                        Commentaires (<span id="commentsCount">0</span>)
+                    </h3>
+                    
+                    <div class="comment-form-container">
+                        <form id="commentForm" class="comment-form">
+                            <input type="text" id="commentName" placeholder="Votre nom" required class="comment-input">
+                            <textarea id="commentText" placeholder="Partagez votre avis..." required class="comment-textarea" rows="4"></textarea>
+                            <button type="submit" class="btn-submit-comment">
+                                <i class="fas fa-paper-plane mr-1"></i>Publier le commentaire
+                            </button>
+                        </form>
+                    </div>
+
+                    <div id="commentsList" class="comments-list"></div>
+                </div>
+
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="article-sidebar">
+                
+                <!-- Quick Navigation -->
+                <div class="sidebar-card sticky-card">
+                    <h3 class="sidebar-title">Navigation rapide</h3>
+                    <div class="quick-nav">
+                        <a href="#top" class="quick-nav-link">
+                            <i class="fas fa-arrow-up"></i> Haut de page
+                        </a>
+                        <a href="#comments" class="quick-nav-link">
+                            <i class="fas fa-comments"></i> Commentaires
+                        </a>
+                        <a href="index.html" class="quick-nav-link">
+                            <i class="fas fa-home"></i> Accueil
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Related Articles -->
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">Articles similaires</h3>
+                    <div id="relatedArticles" class="related-articles-list">
+                        <div class="loading-mini">Chargement...</div>
+                    </div>
+                </div>
+
+                <!-- Newsletter Widget -->
+                <div class="newsletter-widget">
+                    <i class="fas fa-envelope-open-text newsletter-icon"></i>
+                    <h3 class="newsletter-title">Restez Informé</h3>
+                    <p class="newsletter-text">Recevez les dernières actualités électriques.</p>
+                    <button class="btn-newsletter-widget" onclick="openNewsletterModal()">
+                        S'abonner
+                    </button>
+                </div>
+
+            </aside>
+        </div>
+
+    </article>
+
+    <!-- Newsletter Modal -->
+    <div id="newsletterModal" class="modal hidden">
+        <div class="modal-overlay" onclick="closeNewsletterModal()"></div>
+        <div class="modal-dialog">
+            <div class="modal-content-card">
+                <button class="modal-close-small" onclick="closeNewsletterModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="newsletter-modal-content">
+                    <i class="fas fa-envelope newsletter-modal-icon"></i>
+                    <h3 class="newsletter-modal-title">Abonnez-vous à notre Newsletter</h3>
+                    <p class="newsletter-modal-text">Recevez les dernières actualités électriques directement dans votre boîte mail.</p>
+                    <form id="newsletterForm" class="newsletter-form">
+                        <input type="email" id="newsletterEmail" required placeholder="votre@email.fr" class="newsletter-input">
+                        <button type="submit" class="btn-newsletter-submit">
+                            <i class="fas fa-check mr-1"></i>S'abonner
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div id="errorState" class="error-state hidden">
+        <div class="error-content">
+            <i class="fas fa-exclamation-triangle error-icon"></i>
+            <h2 class="error-title">Article introuvable</h2>
+            <p class="error-text">L'article que vous recherchez n'existe pas ou a été supprimé.</p>
+            <a href="index.html" class="btn-back-home">
+                <i class="fas fa-home mr-2"></i>Retour à l'accueil
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-text">&copy; 2026 Électro-Actu par Monsieur Djone. Tous droits réservés.</p>
+            <div class="social-links">
+                <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="article.js"></script>
+</body>
+</html>

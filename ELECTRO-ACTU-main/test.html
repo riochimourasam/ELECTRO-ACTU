@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnostic Firebase</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #1e40af;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #1e3a8a;
+        }
+        #results {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success { color: #16a34a; }
+        .error { color: #dc2626; }
+        .info { color: #0ea5e9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Diagnostic Firebase - Électro-Actu</h1>
+        <p>Ce script va tester votre connexion Firebase et créer un utilisateur de test.</p>
+        
+        <button onclick="testFirebaseConnection()">1️⃣ Tester la connexion Firebase</button>
+        <button onclick="testCreateUser()">2️⃣ Créer utilisateur de test</button>
+        <button onclick="listUsers()">3️⃣ Lister les utilisateurs Auth</button>
+        <button onclick="checkFirestoreRules()">4️⃣ Tester les règles Firestore</button>
+        
+        <div id="results"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, doc, setDoc, getDoc, getDocs, collection, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAlBDedWLbHG-3UnijsSfocm77sNpn15Wg",
+            authDomain: "electroactu-b6050.firebaseapp.com",
+            projectId: "electroactu-b6050",
+            storageBucket: "electroactu-b6050.firebasestorage.app",
+            messagingSenderId: "890343912768",
+            appId: "1:890343912768:web:87de595f6df3c3f434f6a5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const results = document.getElementById('results');
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            results.innerHTML += `<div class="${type}">[${timestamp}] ${message}</div>`;
+            console.log(message);
+        }
+
+        function clearResults() {
+            results.innerHTML = '';
+        }
+
+        // Test 1 : Connexion Firebase
+        window.testFirebaseConnection = function() {
+            clearResults();
+            log('🔍 TEST DE CONNEXION FIREBASE', 'info');
+            log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
+            
+            try {
+                log(`✅ App initialisée`, 'success');
+                log(`📦 Project ID: ${firebaseConfig.projectId}`, 'info');
+                log(`🔑 Auth Domain: ${firebaseConfig.authDomain}`, 'info');
+                log(`🗄️  Auth: ${auth ? 'Connecté' : 'Non connecté'}`, auth ? 'success' : 'error');
+                log(`💾 Firestore: ${db ? 'Connecté' : 'Non connecté'}`, db ? 'success' : 'error');
+                
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        log(`👤 Utilisateur actuellement connecté: ${user.email} (UID: ${user.uid})`, 'success');
+                    } else {
+                        log(`👤 Aucun utilisateur connecté`, 'info');
+                    }
+                });
+                
+            } catch (error) {
+                log(`❌ ERREUR: ${error.message}`, 'error');
+            }
+        };
+
+        // Test 2 : Créer utilisateur
+        window.testCreateUser = async function() {
+            clearResults();
+            log('👤 TEST CRÉATION UTILISATEUR', 'info');
+            log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
+            
+            const timestamp = Date.now();
+            const testEmail = `test${timestamp}@electroactu.com`;
+            const testPassword = 'Test123456!';
+            const testName = `Test User ${timestamp}`;
+            
+            log(`📧 Email de test: ${testEmail}`, 'info');
+            log(`🔐 Mot de passe: ${testPassword}`, 'info');
+            
+            try {
+                // Étape 1: Créer dans Auth
+                log('📍 ÉTAPE 1/4: Création compte Auth...', 'info');
+                const userCredential = await createUserWithEmailAndPassword(auth, testEmail, testPassword);
+                const user = userCredential.user;
+                log(`✅ Compte Auth créé! UID: ${user.uid}`, 'success');
+                
+                // Étape 2: Update profil
+                log('📍 ÉTAPE 2/4: Mise à jour profil...', 'info');
+                await updateProfile(user, { displayName: testName });
+                log(`✅ Profil mis à jour: ${testName}`, 'success');
+                
+                // Étape 3: Créer document Firestore
+                log('📍 ÉTAPE 3/4: Création document Firestore...', 'info');
+                const userDocRef = doc(db, 'users', user.uid);
+                log(`📄 Chemin: users/${user.uid}`, 'info');
+                
+                const userData = {
+                    name: testName,
+                    email: testEmail,
+                    role: 'user',
+                    photoURL: null,
+                    createdAt: serverTimestamp()
+                };
+                
+                await setDoc(userDocRef, userData);
+                log(`✅ Document Firestore créé!`, 'success');
+                
+                // Étape 4: Vérification
+                log('📍 ÉTAPE 4/4: Vérification...', 'info');
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                const verifyDoc = await getDoc(userDocRef);
+                if (verifyDoc.exists()) {
+                    log(`✅✅✅ SUCCÈS TOTAL! Document vérifié`, 'success');
+                    log(`📊 Données: ${JSON.stringify(verifyDoc.data(), null, 2)}`, 'success');
+                    log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'success');
+                    log(`🎉 TOUT FONCTIONNE PARFAITEMENT!`, 'success');
+                    log(`📍 Allez maintenant dans Firebase Console:`, 'info');
+                    log(`   1. Authentication → Users`, 'info');
+                    log(`   2. Firestore Database → users`, 'info');
+                    log(`   Vous devriez voir cet utilisateur.`, 'info');
+                } else {
+                    log(`❌ PROBLÈME: Document non trouvé après création`, 'error');
+                    log(`⚠️ Le compte Auth existe mais pas le document Firestore`, 'error');
+                    log(`🔧 Solution: Vérifiez les règles Firestore`, 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ ERREUR: ${error.code}`, 'error');
+                log(`📝 Message: ${error.message}`, 'error');
+                
+                if (error.code === 'permission-denied') {
+                    log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'error');
+                    log(`⚠️ PROBLÈME DE PERMISSIONS FIRESTORE!`, 'error');
+                    log(``, 'error');
+                    log(`🔧 SOLUTION:`, 'error');
+                    log(`1. Allez sur Firebase Console`, 'error');
+                    log(`2. Firestore Database → Rules`, 'error');
+                    log(`3. Ajoutez cette règle:`, 'error');
+                    log(``, 'error');
+                    log(`match /users/{userId} {`, 'error');
+                    log(`  allow create: if request.auth.uid == userId;`, 'error');
+                    log(`  allow read: if request.auth != null;`, 'error');
+                    log(`}`, 'error');
+                }
+            }
+        };
+
+        // Test 3: Lister les utilisateurs (nécessite admin)
+        window.listUsers = async function() {
+            clearResults();
+            log('📋 LISTE DES UTILISATEURS FIRESTORE', 'info');
+            log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
+            
+            try {
+                const usersSnapshot = await getDocs(collection(db, 'users'));
+                
+                if (usersSnapshot.empty) {
+                    log(`⚠️ Aucun utilisateur trouvé dans Firestore`, 'error');
+                    log(``, 'info');
+                    log(`Cela peut signifier:`, 'info');
+                    log(`1. Aucun compte n'a encore été créé`, 'info');
+                    log(`2. Les documents n'ont pas été créés (problème de règles)`, 'info');
+                    log(`3. Vous n'avez pas les permissions de lecture`, 'info');
+                } else {
+                    log(`✅ ${usersSnapshot.size} utilisateur(s) trouvé(s):`, 'success');
+                    log(``, 'info');
+                    
+                    usersSnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'info');
+                        log(`📧 Email: ${data.email}`, 'info');
+                        log(`👤 Nom: ${data.name}`, 'info');
+                        log(`🔑 UID: ${doc.id}`, 'info');
+                        log(`👑 Rôle: ${data.role}`, 'info');
+                        log(`📅 Créé: ${data.createdAt?.toDate?.() || 'N/A'}`, 'info');
+                    });
+                }
+                
+            } catch (error) {
+                log(`❌ ERREUR: ${error.code}`, 'error');
+                log(`📝 Message: ${error.message}`, 'error');
+                
+                if (error.code === 'permission-denied') {
+                    log(`⚠️ Vous n'avez pas la permission de lire la collection 'users'`, 'error');
+                }
+            }
+        };
+
+        // Test 4: Tester les règles Firestore
+        window.checkFirestoreRules = async function() {
+            clearResults();
+            log('🔐 TEST DES RÈGLES FIRESTORE', 'info');
+            log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
+            
+            const currentUser = auth.currentUser;
+            
+            if (!currentUser) {
+                log(`⚠️ Aucun utilisateur connecté`, 'error');
+                log(`📍 Créez d'abord un utilisateur avec le bouton 2️⃣`, 'info');
+                return;
+            }
+            
+            log(`👤 Utilisateur connecté: ${currentUser.email}`, 'success');
+            log(`🔑 UID: ${currentUser.uid}`, 'info');
+            log(``, 'info');
+            
+            // Test 1: Lecture de son propre document
+            log(`TEST 1: Lecture de son propre document...`, 'info');
+            try {
+                const docRef = doc(db, 'users', currentUser.uid);
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    log(`✅ Lecture réussie`, 'success');
+                } else {
+                    log(`⚠️ Document n'existe pas`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Échec: ${error.code}`, 'error');
+            }
+            
+            log(``, 'info');
+            
+            // Test 2: Écriture dans son propre document
+            log(`TEST 2: Écriture dans son propre document...`, 'info');
+            try {
+                const docRef = doc(db, 'users', currentUser.uid);
+                await setDoc(docRef, { testField: 'test' }, { merge: true });
+                log(`✅ Écriture réussie`, 'success');
+            } catch (error) {
+                log(`❌ Échec: ${error.code}`, 'error');
+            }
+            
+            log(``, 'info');
+            log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`, 'info');
+            log(`📊 Résumé des tests terminé`, 'success');
+        };
+    </script>
+</body>
+</html>
