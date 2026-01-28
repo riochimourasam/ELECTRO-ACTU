@@ -1258,3 +1258,90 @@ window.addEventListener('error', (e) => {
 window.addEventListener('unhandledrejection', (e) => {
     console.error('Promise rejetée:', e.reason);
 });
+// ============================================
+// MENU HAMBURGER MOBILE
+// ============================================
+
+// Fonctions pour le menu mobile
+function openMobileMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileMenu) {
+        mobileMenu.classList.add('active');
+        document.body.classList.add('menu-open');
+    }
+}
+
+function closeMobileMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileMenu) {
+        mobileMenu.classList.remove('active');
+        document.body.classList.remove('menu-open');
+    }
+}
+
+function toggleMobileMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileMenu) {
+        if (mobileMenu.classList.contains('active')) {
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
+        }
+    }
+}
+
+// Initialisation du menu mobile
+function initMobileMenu() {
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const mobileMenuClose = document.getElementById('mobileMenuClose');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link');
+    
+    // Ouvrir le menu
+    if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener('click', openMobileMenu);
+    }
+    
+    // Fermer le menu
+    if (mobileMenuClose) {
+        mobileMenuClose.addEventListener('click', closeMobileMenu);
+    }
+    
+    // Fermer avec l'overlay
+    if (mobileMenuOverlay) {
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+    }
+    
+    // Fermer quand on clique sur un lien
+    mobileMenuLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            // Ne ferme pas si c'est le lien Newsletter (géré par onclick)
+            if (!link.onclick) {
+                closeMobileMenu();
+            }
+        });
+    });
+    
+    // Fermer avec la touche Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeMobileMenu();
+        }
+    });
+    
+    // Gérer le redimensionnement de la fenêtre
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            if (window.innerWidth > 768) {
+                closeMobileMenu();
+            }
+        }, 250);
+    });
+}
+
+// Ajouter l'initialisation du menu mobile au chargement
+document.addEventListener('DOMContentLoaded', () => {
+    initMobileMenu();
+});
