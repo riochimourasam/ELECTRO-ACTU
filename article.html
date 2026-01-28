@@ -71,10 +71,57 @@
                     <a href="auth.html" class="btn-admin">
                         <i class="fas fa-user-shield mr-1"></i>Connexion
                     </a>
+                    <!-- Bouton Menu Hamburger -->
+                    <button id="mobileMenuToggle" class="mobile-menu-toggle" aria-label="Menu">
+                        <i class="fas fa-bars"></i>
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
+
+    <!-- Menu Mobile Coulissant -->
+    <div id="mobileMenu" class="mobile-menu">
+        <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+        <div class="mobile-menu-content">
+            <div class="mobile-menu-header">
+                <div class="mobile-menu-logo">
+                    <img src="images/logo-small.png" alt="Électro-Actu" class="mobile-logo-image">
+                    <span class="mobile-logo-text">ÉLECTRO-ACTU</span>
+                </div>
+                <button id="mobileMenuClose" class="mobile-menu-close" aria-label="Fermer le menu">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <nav class="mobile-menu-nav">
+                <a href="index.html" class="mobile-menu-link">
+                    <i class="fas fa-home"></i>
+                    <span>Accueil</span>
+                </a>
+                <a href="index.html#nouveautes" class="mobile-menu-link">
+                    <i class="fas fa-star"></i>
+                    <span>Nouveautés</span>
+                </a>
+                <a href="index.html#innovations" class="mobile-menu-link">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Innovations</span>
+                </a>
+                <a href="index.html#securite" class="mobile-menu-link">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Sécurité</span>
+                </a>
+                <div class="mobile-menu-divider"></div>
+                <a href="#" class="mobile-menu-link" onclick="openNewsletterModal(); closeMobileMenu(); return false;">
+                    <i class="fas fa-envelope"></i>
+                    <span>Newsletter</span>
+                </a>
+                <a href="auth.html" class="mobile-menu-link mobile-menu-link-accent">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Connexion</span>
+                </a>
+            </nav>
+        </div>
+    </div>
 
     <!-- Loading State -->
     <div id="loadingState" class="loading-state">
@@ -108,7 +155,7 @@
                         <div class="author-avatar">JD</div>
                         <div class="author-info">
                             <p class="author-name"> Enoch</p>
-                            <p class="author-role"> Électricité Industrielle</p>
+                            <p class="author-role">Expert en Électricité Industrielle</p>
                         </div>
                     </div>
                     <div class="article-stats-section">
