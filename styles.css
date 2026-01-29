@@ -81,7 +81,9 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 1rem;
     height: 64px;
+    position: relative;
 }
 
 .nav-brand {
@@ -91,6 +93,7 @@ body {
     font-size: 1.25rem;
     font-weight: 700;
     cursor: pointer;
+    z-index: 1001;
 }
 
 .nav-brand i {
@@ -99,6 +102,12 @@ body {
 }
 
 .nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-links {
     display: flex;
     gap: 2rem;
 }
@@ -362,6 +371,12 @@ body {
     font-size: 1.5rem;
     cursor: pointer;
     padding: 0.5rem;
+    z-index: 1001;
+    position: relative;
+}
+
+.mobile-toggle:hover {
+    color: var(--secondary);
 }
 
 /* ============================================
@@ -1199,12 +1214,80 @@ body {
    RESPONSIVE
    ============================================ */
 @media (max-width: 1024px) {
+    .mobile-toggle {
+        display: block;
+    }
+
     .nav-menu {
+        position: fixed;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        flex-direction: column;
+        gap: 0;
+        padding: 1rem 0;
+        box-shadow: var(--shadow-lg);
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        max-height: calc(100vh - 64px);
+        overflow-y: auto;
+        z-index: 999;
+    }
+
+    .nav-menu.active {
+        transform: translateX(0);
+    }
+
+    .nav-links {
+        flex-direction: column;
+        width: 100%;
+        gap: 0;
+    }
+
+    .nav-link {
+        padding: 1rem 1.5rem;
+        width: 100%;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-link.active::after {
         display: none;
     }
 
-    .mobile-toggle {
-        display: block;
+    .nav-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.75rem;
+        padding: 1rem 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .nav-actions .btn-text {
+        display: inline;
+    }
+
+    .user-menu {
+        width: 100%;
+    }
+
+    .user-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .dropdown {
+        position: static;
+        box-shadow: none;
+        border-radius: 0;
+        background: rgba(255, 255, 255, 0.1);
+        margin-top: 0.75rem;
     }
 
     .content-grid {
@@ -1219,10 +1302,6 @@ body {
 
     .hero-subtitle {
         font-size: 1rem;
-    }
-
-    .btn-text {
-        display: none;
     }
 
     .modal-content {
