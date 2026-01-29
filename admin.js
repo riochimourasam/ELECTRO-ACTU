@@ -174,16 +174,25 @@ function initQuillEditor() {
 articleForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const content = quillEditor.root.innerHTML;
-    
-    // Vérification de sécurité manuelle puisque le "required" HTML est enlevé
-    if (quillEditor.getText().trim().length === 0) {
-        showNotification('❌ Le contenu de l\'article ne peut pas être vide', 'error');
-        return;
-    }
-
     try {
-        // ... la suite de votre code actuel ...
+        // Synchroniser Quill avec le textarea pour la validation
+        const content = quillEditor.root.innerHTML;
+        document.getElementById('content').value = content;
+
+        // Vérifier que le contenu n'est pas vide (seulement <p><br></p>)
+        const textContent = quillEditor.getText().trim();
+        if (!textContent || textContent.length < 10) {
+            showNotification('⚠️ Le contenu de l\'article est trop court', 'error');
+            return;
+        }
+
+        const title = document.getElementById('title').value.trim();
+        const category = document.getElementById('category').value;
+        const imageUrl = document.getElementById('imageUrl').value.trim();
+        const summary = document.getElementById('summary').value.trim();
+        const featured = document.getElementById('featured').checked;
+        const tags = document.getElementById('tags').value.split(',').map(t => t.trim()).filter(t => t);
+
         // 🆕 GÉNÉRER LE SLUG
         const slug = await generateUniqueSlug(title, editMode ? currentEditId : null);
 
