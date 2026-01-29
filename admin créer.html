@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer un Admin - Électro-Actu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .container {
+            background: white;
+            padding: 3rem;
+            border-radius: 1rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        
+        input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(124, 58, 237, 0.3);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        #result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: none;
+        }
+        
+        #result.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 2px solid #10b981;
+        }
+        
+        #result.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #dc2626;
+        }
+        
+        #result.info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 2px solid #3b82f6;
+        }
+        
+        .icon {
+            font-size: 2rem;
+            margin-right: 0.5rem;
+        }
+        
+        .admin-list {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e5e7eb;
+        }
+        
+        .admin-list h2 {
+            font-size: 1.25rem;
+            color: #374151;
+            margin-bottom: 1rem;
+        }
+        
+        .admin-item {
+            padding: 0.75rem;
+            background: #f9fafb;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-email {
+            font-weight: 500;
+            color: #1f2937;
+        }
+        
+        .admin-badge {
+            background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+    </style>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Électro-Actu | Actualité Électrique</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon.ico">
+<link rel="icon" type="image/png" sizes="48x48" href="images/logo-small.png">
+
+<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+
+<link rel="icon" type="image/png" sizes="512x512" href="images/logo.png">
+
+<meta name="description" content="Électro-Actu : Votre source d'actualités en électricité industrielle. Innovations, sécurité, tutoriels et nouveautés du secteur électrique.">
+
+<meta property="og:title" content="Électro-Actu | Actualité Électrique">
+<meta property="og:description" content="Découvrez les dernières innovations en électricité industrielle">
+<meta property="og:image" content="https://electroinfo.online/images/logo.png">
+<meta property="og:url" content="https://electroinfo.online">
+<meta property="og:type" content="website">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Électro-Actu | Actualité Électrique">
+<meta name="twitter:description" content="Découvrez les dernières innovations en électricité industrielle">
+<meta name="twitter:image" content="https://electroinfo.online/images/logo.png">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <span class="icon">👑</span>
+            Créer un Administrateur
+        </h1>
+        <p class="subtitle">Électro-Actu - Panneau de gestion</p>
+        
+        <form id="adminForm">
+            <div class="form-group">
+                <label for="adminName">Nom complet</label>
+                <input type="text" id="adminName" required placeholder="Ex: Jean Dupont">
+            </div>
+            
+            <div class="form-group">
+                <label for="adminEmail">Email</label>
+                <input type="email" id="adminEmail" required placeholder="admin@electroactu.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="adminPassword">Mot de passe</label>
+                <input type="password" id="adminPassword" required minlength="6" placeholder="Minimum 6 caractères">
+            </div>
+            
+            <button type="submit" class="btn" id="submitBtn">
+                ✨ Créer l'administrateur
+            </button>
+        </form>
+        
+        <div id="result"></div>
+        
+        <div class="admin-list" id="adminListSection" style="display: none;">
+            <h2>📋 Administrateurs existants</h2>
+            <div id="adminList"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, doc, setDoc, getDocs, collection, query, where, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAlBDedWLbHG-3UnijsSfocm77sNpn15Wg",
+            authDomain: "electroactu-b6050.firebaseapp.com",
+            projectId: "electroactu-b6050",
+            storageBucket: "electroactu-b6050.firebasestorage.app",
+            messagingSenderId: "890343912768",
+            appId: "1:890343912768:web:87de595f6df3c3f434f6a5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const adminForm = document.getElementById('adminForm');
+        const result = document.getElementById('result');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Charger la liste des admins
+        loadAdmins();
+
+        adminForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('adminName').value.trim();
+            const email = document.getElementById('adminEmail').value.trim();
+            const password = document.getElementById('adminPassword').value;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Création en cours...';
+            result.style.display = 'none';
+
+            try {
+                console.log('📍 Début de la création admin...');
+                console.log('Email:', email);
+                console.log('Nom:', name);
+
+                // Étape 1: Créer le compte Auth
+                console.log('📍 ÉTAPE 1: Création compte Firebase Auth...');
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                console.log('✅ Compte Auth créé! UID:', user.uid);
+
+                // Étape 2: Mettre à jour le profil
+                console.log('📍 ÉTAPE 2: Mise à jour profil...');
+                await updateProfile(user, { displayName: name });
+                console.log('✅ Profil mis à jour');
+
+                // Étape 3: Créer le document Firestore avec rôle ADMIN
+                console.log('📍 ÉTAPE 3: Création document Firestore avec rôle ADMIN...');
+                const adminData = {
+                    name: name,
+                    email: email,
+                    role: 'admin', // ⚠️ IMPORTANT: Rôle admin
+                    photoURL: null,
+                    createdAt: serverTimestamp()
+                };
+
+                await setDoc(doc(db, 'users', user.uid), adminData);
+                console.log('✅ Document Firestore créé avec rôle admin!');
+
+                // Succès
+                showResult(
+                    `✅ Administrateur créé avec succès!
+                    
+📧 Email: ${email}
+👤 Nom: ${name}
+🔑 UID: ${user.uid}
+👑 Rôle: ADMIN
+
+L'administrateur peut maintenant se connecter et accéder au panneau d'administration.`,
+                    'success'
+                );
+
+                adminForm.reset();
+                loadAdmins();
+
+            } catch (error) {
+                console.error('❌ Erreur:', error);
+                
+                let errorMessage = 'Erreur lors de la création de l\'administrateur.';
+                
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = '❌ Cet email est déjà utilisé. Utilisez un autre email.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = '❌ Email invalide.';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = '❌ Mot de passe trop faible (minimum 6 caractères).';
+                } else if (error.code === 'permission-denied') {
+                    errorMessage = '❌ Erreur de permissions Firestore. Vérifiez les règles de sécurité.';
+                } else {
+                    errorMessage = `❌ ${error.message}`;
+                }
+
+                showResult(errorMessage, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '✨ Créer l\'administrateur';
+            }
+        });
+
+        async function loadAdmins() {
+            try {
+                const q = query(collection(db, 'users'), where('role', '==', 'admin'));
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) {
+                    document.getElementById('adminListSection').style.display = 'none';
+                    return;
+                }
+
+                document.getElementById('adminListSection').style.display = 'block';
+                const adminList = document.getElementById('adminList');
+                adminList.innerHTML = '';
+
+                snapshot.forEach(doc => {
+                    const admin = doc.data();
+                    const div = document.createElement('div');
+                    div.className = 'admin-item';
+                    div.innerHTML = `
+                        <span class="admin-email">${admin.email}</span>
+                        <span class="admin-badge">ADMIN</span>
+                    `;
+                    adminList.appendChild(div);
+                });
+
+            } catch (error) {
+                console.error('Erreur chargement admins:', error);
+            }
+        }
+
+        function showResult(message, type) {
+            result.textContent = message;
+            result.className = type;
+            result.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
