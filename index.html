@@ -34,63 +34,65 @@
             <div class="nav-brand">
                <img src="images/logo-small.png" alt="Logo Électro-Actu" class="nav-logo">
              <span>ÉLECTRO-ACTU</span>
-               </div>
-            
-            <div class="nav-menu" id="navMenu">
-                <a href="index.html" class="nav-link active">Accueil</a>
-                <a href="#innovations" class="nav-link">Innovations</a>
-                <a href="#securite" class="nav-link">Sécurité</a>
-                <a href="#nouveautes" class="nav-link">Nouveautés</a>
             </div>
             
-            <div class="nav-actions">
-                <button id="newsletterBtn" class="btn btn-outline">
-                    <i class="fas fa-envelope"></i>
-                    <span class="btn-text">Newsletter</span>
-                </button>
-                
-                <!-- Non connecté -->
-                <a href="auth.html" id="loginBtn" class="btn btn-primary">
-                    <i class="fas fa-sign-in-alt"></i>
-                    <span class="btn-text">Connexion</span>
-                </a>
-                
-                <!-- Connecté -->
-                <div id="userMenu" class="user-menu hidden">
-                    <button class="user-btn" id="userMenuToggle">
-                        <img id="userAvatar" src="" alt="Avatar" class="avatar">
-                        <span id="userName" class="user-name"></span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="dropdown hidden" id="userDropdown">
-                        <div class="dropdown-header">
-                            <img id="userAvatarDropdown" src="" alt="Avatar" class="avatar-large">
-                            <div>
-                                <div class="dropdown-name" id="userNameDropdown"></div>
-                                <div class="dropdown-email" id="userEmailDropdown"></div>
-                            </div>
-                        </div>
-                        <hr>
-                        <a href="#profile" class="dropdown-item">
-                            <i class="fas fa-user"></i> Mon Profil
-                        </a>
-                        <a href="#favorites" class="dropdown-item">
-                            <i class="fas fa-bookmark"></i> Favoris
-                        </a>
-                        <hr id="adminDivider" class="hidden">
-                        <a href="admin.html" id="adminLink" class="dropdown-item hidden">
-                            <i class="fas fa-cog"></i> Administration
-                        </a>
-                        <hr>
-                        <button id="logoutBtn" class="dropdown-item logout">
-                            <i class="fas fa-sign-out-alt"></i> Déconnexion
-                        </button>
-                    </div>
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="nav-menu" id="navMenu">
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link active">Accueil</a>
+                    <a href="#innovations" class="nav-link">Innovations</a>
+                    <a href="#securite" class="nav-link">Sécurité</a>
+                    <a href="#nouveautes" class="nav-link">Nouveautés</a>
                 </div>
                 
-                <button class="mobile-toggle" id="mobileToggle">
-                    <i class="fas fa-bars"></i>
-                </button>
+                <div class="nav-actions">
+                    <button id="newsletterBtn" class="btn btn-outline">
+                        <i class="fas fa-envelope"></i>
+                        <span class="btn-text">Newsletter</span>
+                    </button>
+                    
+                    <!-- Non connecté -->
+                    <a href="auth.html" id="loginBtn" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span class="btn-text">Connexion</span>
+                    </a>
+                    
+                    <!-- Connecté -->
+                    <div id="userMenu" class="user-menu hidden">
+                        <button class="user-btn" id="userMenuToggle">
+                            <img id="userAvatar" src="" alt="Avatar" class="avatar">
+                            <span id="userName" class="user-name"></span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown hidden" id="userDropdown">
+                            <div class="dropdown-header">
+                                <img id="userAvatarDropdown" src="" alt="Avatar" class="avatar-large">
+                                <div>
+                                    <div class="dropdown-name" id="userNameDropdown"></div>
+                                    <div class="dropdown-email" id="userEmailDropdown"></div>
+                                </div>
+                            </div>
+                            <hr>
+                            <a href="#profile" class="dropdown-item">
+                                <i class="fas fa-user"></i> Mon Profil
+                            </a>
+                            <a href="#favorites" class="dropdown-item">
+                                <i class="fas fa-bookmark"></i> Favoris
+                            </a>
+                            <hr id="adminDivider" class="hidden">
+                            <a href="admin.html" id="adminLink" class="dropdown-item hidden">
+                                <i class="fas fa-cog"></i> Administration
+                            </a>
+                            <hr>
+                            <button id="logoutBtn" class="dropdown-item logout">
+                                <i class="fas fa-sign-out-alt"></i> Déconnexion
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
