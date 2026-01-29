@@ -415,8 +415,42 @@ function showNotification(message, type = 'info') {
 }
 
 // Mobile menu toggle
-document.getElementById('mobileToggle')?.addEventListener('click', () => {
-    document.getElementById('navMenu').classList.toggle('active');
+const mobileToggle = document.getElementById('mobileToggle');
+const navMenu = document.getElementById('navMenu');
+
+mobileToggle?.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+    // Changer l'icône du menu
+    const icon = mobileToggle.querySelector('i');
+    if (navMenu.classList.contains('active')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+    } else {
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
+});
+
+// Fermer le menu mobile quand on clique sur un lien
+document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+        const icon = mobileToggle.querySelector('i');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    });
+});
+
+// Fermer le menu mobile quand on clique en dehors
+document.addEventListener('click', (e) => {
+    if (navMenu && mobileToggle && !navMenu.contains(e.target) && !mobileToggle.contains(e.target)) {
+        navMenu.classList.remove('active');
+        const icon = mobileToggle.querySelector('i');
+        if (icon) {
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+    }
 });
 
 // Initialisation
