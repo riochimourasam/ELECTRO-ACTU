@@ -11,27 +11,38 @@
         "source": "/article/**",
         "destination": "/article.html"
       }
-    ],
-    "cleanUrls": true,
-    "headers": [
-      {
-        "source": "**/*.@(jpg|jpeg|gif|png|svg|webp)",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "max-age=31536000"
-          }
-        ]
-      },
-      {
-        "source": "**/*.@(js|css)",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "max-age=604800"
-          }
-        ]
-      }
     ]
   }
 }
+```
+
+---
+
+### **Solution 3 : Vider les caches**
+
+**Dans ton navigateur :**
+- Appuie sur `Ctrl + Shift + R` (Windows)
+- Ou `Cmd + Shift + R` (Mac)
+
+**Ou en navigation privée :**
+- Teste l'URL en mode incognito
+
+---
+
+### **Solution 4 : Vérifier que les slugs existent**
+
+**Test rapide :** 
+
+1. Va sur ton panel admin
+2. Regarde si les liens affichés contiennent `/article/...` ou `?id=...`
+3. Si c'est encore `?id=...`, les slugs ne sont pas générés
+
+**Si les slugs manquent :** Tu dois régénérer les slugs pour tes anciens articles. Je peux te faire un script pour ça si besoin.
+
+---
+
+### **Solution 5 : Tester avec un ID d'abord**
+
+Teste si l'ancien système fonctionne encore :
+```
+electroinfo.online/article.html?id=TON_ID_ARTICLE
