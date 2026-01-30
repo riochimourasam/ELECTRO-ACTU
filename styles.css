@@ -43,6 +43,7 @@
     box-sizing: border-box;
 }
 
+<<<<<<< HEAD
 /* Images responsives par défaut */
 img {
     max-width: 100%;
@@ -55,6 +56,8 @@ input, select, textarea, button {
     font-size: 16px; /* minimum iOS pour éviter le zoom */
 }
 
+=======
+>>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
 html {
     scroll-behavior: smooth;
 }
@@ -153,6 +156,7 @@ body {
     align-items: center;
 }
 
+<<<<<<< HEAD
 /* Masquer le texte des boutons nav sur les écrans moyens */
 @media (max-width: 1280px) and (min-width: 1025px) {
     .nav-actions .btn-text {
@@ -160,6 +164,8 @@ body {
     }
 }
 
+=======
+>>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
 /* ============================================
    BOUTONS
    ============================================ */
@@ -290,9 +296,12 @@ body {
 .avatar-large {
     width: 3rem;
     height: 3rem;
+<<<<<<< HEAD
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid white;
+=======
+>>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
 }
 
 .user-name {
@@ -395,11 +404,14 @@ body {
     padding: 0.5rem;
     z-index: 1001;
     position: relative;
+<<<<<<< HEAD
     min-width: 44px;
     min-height: 44px;
     align-items: center;
     justify-content: center;
     -webkit-tap-highlight-color: transparent;
+=======
+>>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
 }
 
 .mobile-toggle:hover {
@@ -1201,19 +1213,26 @@ body {
 }
 
 .pagination-btn {
+<<<<<<< HEAD
     padding: 0.6rem 1rem;
     min-width: 44px;
     min-height: 44px;
+=======
+    padding: 0.5rem 1rem;
+>>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
     border: 2px solid var(--gray-300);
     background: white;
     border-radius: var(--radius);
     cursor: pointer;
     transition: all 0.3s;
     font-weight: 500;
+<<<<<<< HEAD
     display: inline-flex;
     align-items: center;
     justify-content: center;
     -webkit-tap-highlight-color: transparent;
+=======
+>>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
 }
 
 .pagination-btn:hover:not(:disabled) {
@@ -1345,6 +1364,21 @@ body {
 .footer-credit {
     font-size: 0.875rem;
 }
+<<<<<<< HEAD
+=======
+    font-size: 1.5rem;
+}
+
+.social-links a {
+    color: white;
+    transition: color 0.3s, transform 0.3s;
+}
+
+.social-links a:hover {
+    color: var(--secondary);
+    transform: translateY(-3px);
+}
+>>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
 
 /* ============================================
    AUTH PAGE
@@ -1677,8 +1711,12 @@ body {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+<<<<<<< HEAD
     max-width: calc(100vw - 2rem); /* ne jamais dépasser la largeur écran */
     width: max-content;
+=======
+    max-width: 20rem;
+>>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
     transition: right 0.3s ease-out;
     border-left: 4px solid var(--primary);
 }
@@ -1756,7 +1794,11 @@ body {
    ============================================ */
 @media (max-width: 1024px) {
     .mobile-toggle {
+<<<<<<< HEAD
         display: flex;
+=======
+        display: block;
+>>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
     }
 
     .nav-menu {
@@ -1764,7 +1806,10 @@ body {
         top: 64px;
         left: 0;
         right: 0;
+<<<<<<< HEAD
         display: flex; /* ✅ Nécessaire pour que le menu soit visible quand actif */
+=======
+>>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
         background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
         flex-direction: column;
         gap: 0;
@@ -1896,6 +1941,7 @@ body {
     .values-grid {
         grid-template-columns: 1fr;
     }
+<<<<<<< HEAD
 
     /* Sort bar : pleine largeur sur mobile */
     .sort-bar {
@@ -1915,6 +1961,8 @@ body {
     .article-image {
         height: 180px;
     }
+=======
+>>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
 }
 
 @media (max-width: 480px) {
@@ -1963,6 +2011,7 @@ body {
     .social-links-grid {
         grid-template-columns: 1fr;
     }
+<<<<<<< HEAD
 
     /* Titre article très petit écran */
     .article-title {
@@ -2086,6 +2135,8 @@ select, textarea {
         align-items: flex-end;
         padding: 0;
     }
+=======
+>>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
 }
 
 .nav-logo {
