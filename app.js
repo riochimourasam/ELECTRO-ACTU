@@ -166,12 +166,8 @@ function createArticleCard(article) {
 
     return `
         <article class="article-card" onclick="window.location.href='${articleUrl}'">
-<<<<<<< HEAD
             <img src="${imgUrl}" alt="${escapeHtml(article.title)}" class="article-image" loading="lazy"
                  onerror="this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?w=800'">
-=======
-            <img src="${imgUrl}" alt="${escapeHtml(article.title)}" class="article-image" loading="lazy">
->>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
             <div class="article-content">
                 <div class="article-meta">
                     <span class="badge badge-${categoryClass}">${escapeHtml(article.category)}</span>
@@ -286,7 +282,6 @@ async function displayPopularArticles() {
 // ============================================
 // RECHERCHE & FILTRES
 // ============================================
-<<<<<<< HEAD
 
 // Debounce : évite de relancer la recherche à chaque frappe (utile sur mobile)
 function debounce(fn, delay = 300) {
@@ -298,9 +293,6 @@ function debounce(fn, delay = 300) {
 }
 
 searchInput?.addEventListener('input', debounce((e) => {
-=======
-searchInput?.addEventListener('input', (e) => {
->>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
     const query = e.target.value.toLowerCase().trim();
 
     if (!query) {
@@ -315,11 +307,7 @@ searchInput?.addEventListener('input', (e) => {
 
     currentPage = 1;
     displayArticles();
-<<<<<<< HEAD
 }));
-=======
-});
->>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
 
 filterBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -380,10 +368,7 @@ window.closeNewsletterModal = function() {
     document.getElementById('newsletterForm').reset();
 };
 
-<<<<<<< HEAD
 // ✅ Le bouton #newsletterBtn n'a pas de onclick dans le HTML : on ajoute le listener ici
-=======
->>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
 document.getElementById('newsletterBtn')?.addEventListener('click', openNewsletterModal);
 
 document.getElementById('newsletterForm')?.addEventListener('submit', async (e) => {
@@ -452,7 +437,6 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
-<<<<<<< HEAD
 // ============================================
 // MENU MOBILE
 // ============================================
@@ -472,15 +456,6 @@ function closeMobileMenu() {
 mobileToggle?.addEventListener('click', (e) => {
     e.stopPropagation();
     navMenu.classList.toggle('active');
-=======
-// Mobile menu toggle
-const mobileToggle = document.getElementById('mobileToggle');
-const navMenu = document.getElementById('navMenu');
-
-mobileToggle?.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    // Changer l'icône du menu
->>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
     const icon = mobileToggle.querySelector('i');
     if (navMenu.classList.contains('active')) {
         icon.classList.remove('fa-bars');
@@ -493,31 +468,13 @@ mobileToggle?.addEventListener('click', () => {
 
 // Fermer le menu mobile quand on clique sur un lien
 document.querySelectorAll('.nav-link').forEach(link => {
-<<<<<<< HEAD
     link.addEventListener('click', () => closeMobileMenu());
-=======
-    link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-        const icon = mobileToggle.querySelector('i');
-        icon.classList.remove('fa-times');
-        icon.classList.add('fa-bars');
-    });
->>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
 });
 
 // Fermer le menu mobile quand on clique en dehors
 document.addEventListener('click', (e) => {
     if (navMenu && mobileToggle && !navMenu.contains(e.target) && !mobileToggle.contains(e.target)) {
-<<<<<<< HEAD
         closeMobileMenu();
-=======
-        navMenu.classList.remove('active');
-        const icon = mobileToggle.querySelector('i');
-        if (icon) {
-            icon.classList.remove('fa-times');
-            icon.classList.add('fa-bars');
-        }
->>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
     }
 });
 
