@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Archives | Électro-Actu</title>
+    <meta name="description" content="Consultez l'historique complet des articles publiés sur Électro-Actu. Archives organisées par date, catégorie et auteur.">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="48x48" href="/images/logo-small.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/images/logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Archives | Électro-Actu">
+    <meta property="og:description" content="Historique complet des publications">
+    <meta property="og:image" content="https://electroinfo.online/images/logo.png">
+    <meta property="og:url" content="https://electroinfo.online/archives.html">
+    <meta property="og:type" content="website">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/archives-styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <img src="images/logo-small.png" alt="Logo Électro-Actu" class="nav-logo">
+                <span>ÉLECTRO-ACTU</span>
+            </div>
+            
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="nav-menu" id="navMenu">
+                <div class="nav-links">
+                    <a href="/index.html" class="nav-link">Accueil</a>
+                    <a href="/about.html" class="nav-link">À Propos</a>
+                    <a href="/archives.html" class="nav-link active">Archives</a>
+                    <a href="/index.html#newsletter" class="nav-link">Newsletter</a>
+                </div>
+                
+                <div class="nav-actions">
+                    <a href="auth.html" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span class="btn-text">Connexion</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="archives-hero">
+        <div class="container">
+            <div class="archives-hero-content">
+                <h1 class="archives-title">
+                    <i class="fas fa-archive"></i>
+                    Archives des Publications
+                </h1>
+                <p class="archives-subtitle">
+                    Explorez l'historique complet de nos articles
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="archives-content">
+        <div class="container">
+            <!-- Stats Overview -->
+            <section class="archives-stats">
+                <div class="stats-grid-archives">
+                    <div class="stat-card-archives">
+                        <i class="fas fa-newspaper"></i>
+                        <div class="stat-info">
+                            <span class="stat-number" id="totalArticlesArchive">0</span>
+                            <span class="stat-label">Articles au total</span>
+                        </div>
+                    </div>
+                    <div class="stat-card-archives">
+                        <i class="fas fa-calendar-check"></i>
+                        <div class="stat-info">
+                            <span class="stat-number" id="monthsActive">0</span>
+                            <span class="stat-label">Mois actifs</span>
+                        </div>
+                    </div>
+                    <div class="stat-card-archives">
+                        <i class="fas fa-fire"></i>
+                        <div class="stat-info">
+                            <span class="stat-number" id="avgPerMonth">0</span>
+                            <span class="stat-label">Articles/mois</span>
+                        </div>
+                    </div>
+                    <div class="stat-card-archives">
+                        <i class="fas fa-clock"></i>
+                        <div class="stat-info">
+                            <span class="stat-number" id="lastPublished">-</span>
+                            <span class="stat-label">Dernière publication</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Filters -->
+            <section class="archives-filters">
+                <div class="filters-container">
+                    <div class="filter-group">
+                        <label><i class="fas fa-search"></i> Rechercher</label>
+                        <input type="text" id="searchArchives" placeholder="Titre, mots-clés..." class="input">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label><i class="fas fa-tag"></i> Catégorie</label>
+                        <select id="categoryFilter" class="input">
+                            <option value="all">Toutes les catégories</option>
+                            <option value="INNOVATION">Innovation</option>
+                            <option value="SÉCURITÉ">Sécurité</option>
+                            <option value="NOUVEAUTÉ">Nouveauté</option>
+                            <option value="TUTO">Tutoriel</option>
+                            <option value="DOMOTIQUE">Domotique</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label><i class="fas fa-calendar"></i> Année</label>
+                        <select id="yearFilter" class="input">
+                            <option value="all">Toutes les années</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label><i class="fas fa-sort"></i> Trier par</label>
+                        <select id="sortArchives" class="input">
+                            <option value="date-desc">Plus récent</option>
+                            <option value="date-asc">Plus ancien</option>
+                            <option value="views-desc">Plus populaire</option>
+                            <option value="title-asc">Titre (A-Z)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="view-switcher">
+                    <button class="view-btn active" data-view="timeline" title="Vue chronologique">
+                        <i class="fas fa-stream"></i>
+                    </button>
+                    <button class="view-btn" data-view="grid" title="Vue grille">
+                        <i class="fas fa-th"></i>
+                    </button>
+                    <button class="view-btn" data-view="list" title="Vue liste">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Results Count -->
+            <div class="results-info">
+                <p>
+                    <i class="fas fa-info-circle"></i>
+                    <span id="resultsCount">0 articles trouvés</span>
+                </p>
+            </div>
+
+            <!-- Timeline View (Default) -->
+            <section id="timelineView" class="archives-timeline">
+                <div id="timelineContent">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Chargement des archives...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Grid View -->
+            <section id="gridView" class="archives-grid hidden">
+                <div id="gridContent">
+                    <!-- Articles en grille -->
+                </div>
+            </section>
+
+            <!-- List View -->
+            <section id="listView" class="archives-list hidden">
+                <div id="listContent">
+                    <!-- Articles en liste -->
+                </div>
+            </section>
+
+            <!-- Pagination -->
+            <div id="archivesPagination" class="pagination hidden"></div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        <i class="fas fa-bolt"></i>
+                        <span>ÉLECTRO-ACTU</span>
+                    </div>
+                    <p>Votre source d'actualités en électricité industrielle.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Navigation</h4>
+                    <ul class="footer-links">
+                        <li><a href="/index.html">Accueil</a></li>
+                        <li><a href="/about.html">À Propos</a></li>
+                        <li><a href="/archives.html">Archives</a></li>
+                        <li><a href="/auth.html">Connexion</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Suivez-nous</h4>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Électro-Actu. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="/archives.js"></script>
+</body>
+</html>

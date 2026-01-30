@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours | ElectroInfo</title>
+    <meta name="description" content="Détails du cours">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="48x48" href="images/logo-small.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="images/logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="courses-styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <img src="images/logo-small.png" alt="Logo Electroinfo" class="nav-logo">
+                <span>ELECTROINFO</span>
+            </div>
+            
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="nav-menu" id="navMenu">
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Accueil</a>
+                    <a href="courses.html" class="nav-link active">Cours</a>
+                    <a href="about.html" class="nav-link">À propos</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </div>
+                
+                <div class="nav-actions">
+                    <button id="newsletterBtn" class="btn btn-outline">
+                        <i class="fas fa-envelope"></i>
+                        <span class="btn-text">Newsletter</span>
+                    </button>
+                    
+                    <!-- Non connecté -->
+                    <a href="auth.html" id="loginBtn" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span class="btn-text">Connexion</span>
+                    </a>
+                    
+                    <!-- Connecté -->
+                    <div id="userMenu" class="user-menu hidden">
+                        <button class="user-btn" id="userMenuToggle">
+                            <img id="userAvatar" src="" alt="Avatar" class="avatar">
+                            <span id="userName" class="user-name"></span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown hidden" id="userDropdown">
+                            <div class="dropdown-header">
+                                <img id="userAvatarDropdown" src="" alt="Avatar" class="avatar-large">
+                                <div>
+                                    <div class="dropdown-name" id="userNameDropdown"></div>
+                                    <div class="dropdown-email" id="userEmailDropdown"></div>
+                                </div>
+                            </div>
+                            <hr>
+                            <a href="#profile" class="dropdown-item">
+                                <i class="fas fa-user"></i> Mon Profil
+                            </a>
+                            <a href="#favorites" class="dropdown-item">
+                                <i class="fas fa-bookmark"></i> Favoris
+                            </a>
+                            <hr id="adminDivider" class="hidden">
+                            <a href="admin.html" id="adminLink" class="dropdown-item hidden">
+                                <i class="fas fa-cog"></i> Administration
+                            </a>
+                            <hr>
+                            <button id="logoutBtn" class="dropdown-item logout">
+                                <i class="fas fa-sign-out-alt"></i> Déconnexion
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="loading-state">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Chargement du cours...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="errorState" class="error-state hidden">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h2>Cours introuvable</h2>
+        <p>Ce cours n'existe pas ou a été supprimé.</p>
+        <a href="/courses.html" class="btn btn-primary">
+            <i class="fas fa-arrow-left"></i> Retour aux cours
+        </a>
+    </div>
+
+    <!-- Course Detail Container -->
+    <main id="courseContainer" class="course-detail-page hidden">
+        <!-- Course Header -->
+        <div class="course-header">
+            <div class="container">
+                <div class="course-header-content">
+                    <div class="course-meta">
+                        <span class="diploma-badge" id="courseDiploma">BAC PRO</span>
+                        <span class="level-badge" id="courseLevel">Débutant</span>
+                    </div>
+                    <h1 id="courseTitle" class="course-title">Titre du cours</h1>
+                    <p id="courseDescription" class="course-description">Description du cours</p>
+                    
+                    <div class="course-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-list"></i>
+                            <span><span id="sequencesCount">0</span> Séquences</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <span><span id="sessionsCount">0</span> Séances</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-calendar"></i>
+                            <span id="courseDate">Date</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Course Content -->
+        <div class="course-content">
+            <div class="container">
+                <div class="content-layout">
+                    <!-- Sidebar Navigation -->
+                    <aside class="course-sidebar">
+                        <div class="sidebar-sticky">
+                            <h3 class="sidebar-title">
+                                <i class="fas fa-stream"></i> Plan du cours
+                            </h3>
+                            <div id="sequencesNav" class="sequences-nav">
+                                <!-- Navigation sera injectée ici -->
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- Main Content Area -->
+                    <div class="course-main">
+                        <!-- Séquences et Séances -->
+                        <div id="sequencesContainer">
+                            <!-- Les séquences seront injectées ici -->
+                        </div>
+
+                        <!-- Empty State -->
+                        <div id="emptySequences" class="empty-state hidden">
+                            <i class="fas fa-inbox"></i>
+                            <h3>Aucune séquence disponible</h3>
+                            <p>Ce cours n'a pas encore de contenu.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">
+                        <i class="fas fa-bolt"></i>
+                        ElectroInfo
+                    </h3>
+                    <p class="footer-description">
+                        Formation en électricité industrielle au Togo
+                    </p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Navigation</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="courses.html">Cours</a></li>
+                        <li><a href="about.html">À propos</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 ElectroInfo. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module" src="course-detail.js"></script>
+</body>
+</html>

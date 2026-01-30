@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <!-- Encodage et viewport -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Titre et description -->
+    <title>Electroinfo Votre Portail Électrique</title>
+    <meta name="description" content="Electroinfo : Votre source d'actualités en électricité industrielle. Innovations, sécurité, tutoriels et nouveautés du secteur électrique.">
+    
+  <!-- Favicons -->
+<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+<link rel="icon" type="image/png" sizes="48x48" href="/images/logo-small.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/images/logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+
+<!-- Open Graph (Facebook, LinkedIn) -->
+<meta property="og:image" content="https://electroinfo.online/images/logo.png">
+
+<!-- Twitter Card -->
+<meta name="twitter:image" content="https://electroinfo.online/images/logo.png">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+               <img src="images/logo-small.png" alt="Logo Electroinfo" class="nav-logo">
+             <span>ELECTROINFO</span>
+            </div>
+            
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="nav-menu" id="mobileMenu">
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link active">Accueil</a>
+                    <a href="courses.html" class="nav-link">Cours</a>
+                    <a href="about.html" class="nav-link">À propos</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                <div class="nav-actions">
+                    <button id="newsletterBtn" class="btn btn-outline">
+                        <i class="fas fa-envelope"></i>
+                        <span class="btn-text">Newsletter</span>
+                    </button>
+                    
+                    <!-- Non connecté -->
+                    <a href="auth.html" id="loginBtn" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span class="btn-text">Connexion</span>
+                    </a>
+                    
+                    <!-- Connecté -->
+                    <div id="userMenu" class="user-menu hidden">
+                        <button class="user-btn" id="userMenuToggle">
+                            <img id="userAvatar" src="" alt="Avatar" class="avatar">
+                            <span id="userName" class="user-name"></span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown hidden" id="userDropdown">
+                            <div class="dropdown-header">
+                                <img id="userAvatarDropdown" src="" alt="Avatar" class="avatar-large">
+                                <div>
+                                    <div class="dropdown-name" id="userNameDropdown"></div>
+                                    <div class="dropdown-email" id="userEmailDropdown"></div>
+                                </div>
+                            </div>
+                            <hr>
+                            <a href="#profile" class="dropdown-item">
+                                <i class="fas fa-user"></i> Mon Profil
+                            </a>
+                            <a href="#favorites" class="dropdown-item">
+                                <i class="fas fa-bookmark"></i> Favoris
+                            </a>
+                            <hr id="adminDivider" class="hidden">
+                            <a href="admin.html" id="adminLink" class="dropdown-item hidden">
+                                <i class="fas fa-cog"></i> Administration
+                            </a>
+                            <hr>
+                            <button id="logoutBtn" class="dropdown-item logout">
+                                <i class="fas fa-sign-out-alt"></i> Déconnexion
+                            </button>
+                        </div>
+                    </div>
+                </div><!-- /.nav-actions -->
+            </div><!-- /.nav-menu -->
+        </div><!-- /.container -->
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container">
+            <h1 class="hero-title">Le Courant de l'Information</h1>
+            <p class="hero-subtitle">Découvrez les dernières avancées technologiques en électricité</p>
+            
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Rechercher un article...">
+            </div>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 class="section-title">
+                        <i class="fas fa-bolt"></i>
+                        Votre Référence en Électricité
+                    </h2>
+                    <!-- Bloc d'introduction principal -->
+<div id="intro" style="background-color: #f5f5f5; padding: 40px 20px; text-align: center; border-radius: 10px; margin-bottom: 30px;">
+  <h2 style="font-size: 2.5em; margin-bottom: 20px; color: #2c3e50;">Bienvenue sur Electroinfo.online</h2>
+  
+  <p style="font-size: 1.2em; max-width: 800px; margin: 0 auto 25px auto; color: #34495e; line-height: 1.6;">
+    Electroinfo.online est votre plateforme éducative dédiée à l'électricité et à l'électronique. Que vous soyez débutant, étudiant ou passionné, vous trouverez ici des tutoriels pratiques, des guides détaillés et des conseils pour comprendre et appliquer facilement les notions essentielles.
+  </p>
+  
+  <p style="font-size: 1.1em; max-width: 800px; margin: 0 auto 30px auto; color: #34495e; line-height: 1.5;">
+    Chaque article est conçu pour être clair, accessible et directement utilisable, afin que vous puissiez progresser étape par étape tout en découvrant les technologies électriques du quotidien. Explorez nos tutoriels, suivez les actualités techniques et découvrez nos projets pratiques pour enrichir vos connaissances.
+  </p>
+  
+  <a href="about.html" style="display: inline-block; background-color: #2980b9; color: #fff; padding: 12px 30px; font-size: 1.2em; border-radius: 5px; text-decoration: none; transition: background-color 0.3s;">
+    À propos
+  </a>
+</div>
+                </div>
+                <div class="about-features">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>Explications Simples</h3>
+                        <p>Des concepts complexes rendus accessibles à tous, du débutant à l'expert</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Sécurité Prioritaire</h3>
+                        <p>Tous nos conseils respectent les normes de sécurité électrique en vigueur</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Progression Guidée</h3>
+                        <p>Un parcours d'apprentissage structuré pour évoluer à votre rythme</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3>Contenu Actualisé</h3>
+                        <p>Les dernières innovations et tendances du secteur électrique</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="content-grid">
+                <!-- Articles Section -->
+                <section class="articles-section">
+                    <div class="filters">
+                        <button class="filter-btn active" data-category="all">Tous</button>
+                        <button class="filter-btn" data-category="INNOVATION">Innovation</button>
+                        <button class="filter-btn" data-category="SÉCURITÉ">Sécurité</button>
+                        <button class="filter-btn" data-category="NOUVEAUTÉ">Nouveauté</button>
+                        <button class="filter-btn" data-category="TUTO">Tuto</button>
+                        <button class="filter-btn" data-category="DOMOTIQUE">Domotique</button>
+                    </div>
+
+                    <div class="sort-bar">
+                        <label>Trier par :</label>
+                        <select id="sortSelect">
+                            <option value="date-desc">Plus récent</option>
+                            <option value="date-asc">Plus ancien</option>
+                            <option value="popular">Plus populaire</option>
+                            <option value="title">Titre (A-Z)</option>
+                        </select>
+                    </div>
+
+                    <div id="articlesGrid" class="articles-grid">
+                        <div class="loading">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Chargement des articles...</p>
+                        </div>
+                    </div>
+
+                    <div id="pagination" class="pagination hidden"></div>
+                </section>
+
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <div class="widget">
+                        <h3>Articles Populaires</h3>
+                        <div id="popularArticles">
+                            <div class="loading-small">
+                                <i class="fas fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="widget widget-newsletter">
+                        <i class="fas fa-envelope-open-text widget-icon"></i>
+                        <h3>Newsletter</h3>
+                        <p>Restez informé des dernières actualités électriques</p>
+                        <button class="btn btn-block btn-primary" onclick="openNewsletterModal()">
+                            S'abonner
+                        </button>
+                    </div>
+
+                    <div class="widget">
+                        <h3>À Propos</h3>
+                        <p class="widget-text">Bienvenue sur votre portail d'expertise. Ici, nous parlons volt, ampère et watt sans concession.</p>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <!-- Newsletter Modal -->
+    <div id="newsletterModal" class="modal hidden">
+        <div class="modal-overlay" onclick="closeNewsletterModal()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeNewsletterModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-body">
+                <i class="fas fa-envelope modal-icon"></i>
+                <h2>Abonnez-vous à notre Newsletter</h2>
+                <p>Recevez les dernières actualités directement dans votre boîte mail.</p>
+                <form id="newsletterForm">
+                    <input type="email" id="newsletterEmail" required placeholder="votre@email.fr" class="input">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-check"></i> S'abonner
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">
+                        <i class="fas fa-bolt"></i>
+                        Electroinfo
+                    </h3>
+                    <p class="footer-description">
+                        Votre portail d'expertise en électricité et électronique. 
+                        Nous parlons volt, ampère et watt sans concession.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Navigation</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="about.html">À propos</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="#innovations">Innovations</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Ressources</h4>
+                    <ul class="footer-links">
+                        <li><a href="#securite">Sécurité</a></li>
+                        <li><a href="#nouveautes">Nouveautés</a></li>
+                        <li><a href="#" onclick="openNewsletterModal(); return false;">Newsletter</a></li>
+                        <li><a href="admin.html">Administration</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Informations Légales</h4>
+                    <ul class="footer-links">
+                        <li><a href="privacy.html">Politique de confidentialité</a></li>
+                        <li><a href="terms.html">Conditions d'utilisation</a></li>
+                        <li><a href="mentions-legales.html">Mentions légales</a></li>
+                        <li><a href="cookies.html">Gestion des cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Electroinfo. Tous droits réservés.</p>
+                <p class="footer-credit">
+                    Développé avec <i class="fas fa-heart" style="color: #dc2626;"></i> pour la communauté électrique
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase v9 Modular -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>

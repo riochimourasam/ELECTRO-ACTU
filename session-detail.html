@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Séance | ElectroInfo</title>
+    <meta name="description" content="Détails de la séance">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="48x48" href="images/logo-small.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="images/logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="courses-styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        .session-page {
+            min-height: 100vh;
+            background: #f9fafb;
+        }
+        
+        .session-header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 3rem 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .session-header-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-4px);
+        }
+        
+        .session-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .session-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.2;
+        }
+        
+        .session-main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .session-content-card {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .session-content-card h1 {
+            font-size: 2rem;
+            color: #1f2937;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #3b82f6;
+        }
+        
+        .session-content-card h2 {
+            font-size: 1.5rem;
+            color: #1e40af;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .session-content-card h3 {
+            font-size: 1.2rem;
+            color: #374151;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .session-content-card p {
+            line-height: 1.8;
+            color: #374151;
+            margin-bottom: 1rem;
+        }
+        
+        .session-content-card ul,
+        .session-content-card ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+        
+        .session-content-card li {
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+        
+        .session-content-card strong {
+            color: #1f2937;
+            font-weight: 600;
+        }
+        
+        .session-content-card em {
+            font-style: italic;
+            color: #6b7280;
+        }
+        
+        .session-content-card blockquote {
+            border-left: 4px solid #3b82f6;
+            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+            color: #4b5563;
+            font-style: italic;
+            background: #f3f4f6;
+            padding: 1rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .session-content-card code {
+            background: #f3f4f6;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #dc2626;
+            font-size: 0.9em;
+        }
+        
+        .session-content-card pre {
+            background: #1f2937;
+            color: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+        
+        .session-content-card pre code {
+            background: none;
+            color: #f9fafb;
+            padding: 0;
+        }
+        
+        .session-content-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .session-content-card table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .session-content-card th,
+        .session-content-card td {
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        .session-content-card th {
+            background: #f3f4f6;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .session-content-card tr:hover {
+            background: #f9fafb;
+        }
+        
+        .pdf-download-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .pdf-download-card {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            color: white;
+        }
+        
+        .pdf-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+        
+        .pdf-info {
+            flex: 1;
+        }
+        
+        .pdf-info h4 {
+            font-size: 1.2rem;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .pdf-info p {
+            margin: 0;
+            opacity: 0.9;
+        }
+        
+        .pdf-download-btn {
+            background: white;
+            color: #dc2626;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .pdf-download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .nav-btn {
+            background: white;
+            border: 2px solid #e5e7eb;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #374151;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn:hover {
+            border-color: #3b82f6;
+            color: #1e40af;
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            color: #6b7280;
+        }
+        
+        .loading-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #3b82f6;
+        }
+        
+        @media (max-width: 768px) {
+            .session-title {
+                font-size: 1.8rem;
+            }
+            
+            .session-content-card {
+                padding: 1.5rem;
+            }
+            
+            .pdf-download-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .navigation-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <img src="images/logo-small.png" alt="Logo Electroinfo" class="nav-logo">
+                <span>ELECTROINFO</span>
+            </div>
+            
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="nav-menu" id="mobileMenu">
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Accueil</a>
+                    <a href="courses.html" class="nav-link active">Cours</a>
+                    <a href="about.html" class="nav-link">À propos</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </div>
+                
+                <div class="nav-actions">
+                    <button id="newsletterBtn" class="btn btn-outline">
+                        <i class="fas fa-envelope"></i>
+                        <span class="btn-text">Newsletter</span>
+                    </button>
+                    
+                    <!-- Non connecté -->
+                    <a href="auth.html" id="loginBtn" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span class="btn-text">Connexion</span>
+                    </a>
+                    
+                    <!-- Connecté -->
+                    <div id="userMenu" class="user-menu hidden">
+                        <button class="user-btn" id="userMenuToggle">
+                            <img id="userAvatar" src="" alt="Avatar" class="avatar">
+                            <span id="userName" class="user-name"></span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown hidden" id="userDropdown">
+                            <div class="dropdown-header">
+                                <img id="userAvatarDropdown" src="" alt="Avatar" class="avatar-large">
+                                <div>
+                                    <div class="dropdown-name" id="userNameDropdown"></div>
+                                    <div class="dropdown-email" id="userEmailDropdown"></div>
+                                </div>
+                            </div>
+                            <hr>
+                            <a href="#profile" class="dropdown-item">
+                                <i class="fas fa-user"></i> Mon Profil
+                            </a>
+                            <a href="#favorites" class="dropdown-item">
+                                <i class="fas fa-bookmark"></i> Favoris
+                            </a>
+                            <hr id="adminDivider" class="hidden">
+                            <a href="admin.html" id="adminLink" class="dropdown-item hidden">
+                                <i class="fas fa-cog"></i> Administration
+                            </a>
+                            <hr>
+                            <button id="logoutBtn" class="dropdown-item logout">
+                                <i class="fas fa-sign-out-alt"></i> Déconnexion
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="loading-state">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Chargement de la séance...</p>
+    </div>
+
+    <!-- Session Page -->
+    <div id="sessionPage" class="session-page hidden">
+        <!-- Session Header -->
+        <div class="session-header">
+            <div class="session-header-content">
+                <a href="#" id="backButton" class="back-button">
+                    <i class="fas fa-arrow-left"></i>
+                    Retour au cours
+                </a>
+                <div class="session-badge" id="sessionBadge">Séance 1</div>
+                <h1 class="session-title" id="sessionTitle">Titre de la séance</h1>
+            </div>
+        </div>
+
+        <!-- Session Content -->
+        <div class="session-main">
+            <!-- PDF Download Section -->
+            <div id="pdfSection" class="pdf-download-section hidden">
+                <div class="pdf-download-card">
+                    <div class="pdf-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="pdf-info">
+                        <h4>Document PDF disponible</h4>
+                        <p>Téléchargez le support de cours en PDF</p>
+                    </div>
+                    <a id="pdfDownloadBtn" href="#" target="_blank" class="pdf-download-btn">
+                        <i class="fas fa-download"></i> Télécharger le PDF
+                    </a>
+                </div>
+            </div>
+
+            <!-- Session Content -->
+            <div class="session-content-card">
+                <div id="sessionContent">
+                    <!-- Le contenu sera injecté ici -->
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="navigation-buttons">
+                <a href="#" id="prevSessionBtn" class="nav-btn">
+                    <i class="fas fa-chevron-left"></i>
+                    Séance précédente
+                </a>
+                <a href="#" id="nextSessionBtn" class="nav-btn">
+                    Séance suivante
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">
+                        <i class="fas fa-bolt"></i>
+                        ElectroInfo
+                    </h3>
+                    <p class="footer-description">
+                        Formation en électricité industrielle au Togo
+                    </p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Navigation</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="courses.html">Cours</a></li>
+                        <li><a href="about.html">À propos</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 ElectroInfo. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module" src="session-detail.js"></script>
+</body>
+</html>
