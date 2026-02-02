@@ -1,6 +1,24 @@
 // ============================================
-// ARTICLE.JS - VERSION CORRIGÉE ET OPTIMISÉE
+// ARTICLE.JS - VERSION CORRIGÉE AVEC FIREBASE V9
 // ============================================
+
+// Imports Firebase v9 modular
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { 
+    getFirestore, 
+    collection, 
+    doc, 
+    getDoc, 
+    getDocs, 
+    addDoc, 
+    updateDoc, 
+    query, 
+    where, 
+    orderBy, 
+    limit,
+    increment,
+    serverTimestamp 
+} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 // Configuration Firebase
 const firebaseConfig = {
@@ -13,8 +31,8 @@ const firebaseConfig = {
 };
 
 // Initialisation Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 // Variables globales
 let currentArticleId = null;
@@ -128,24 +146,24 @@ function generateUniqueToken() {
 async function loadArticleBySlug(slug) {
     try {
         // Chercher l'article avec ce slug
-        const querySnapshot = await db.collection('articles')
-            .where('slug', '==', slug)
-            .limit(1)
-            .get();
+        const articlesRef = collection(db, 'articles');
+        const q = query(articlesRef, where('slug', '==', slug), limit(1));
+        const querySnapshot = await getDocs(q);
         
         if (querySnapshot.empty) {
             showError();
             return;
         }
         
-        const doc = querySnapshot.docs[0];
-        currentArticleId = doc.id;
+        const docSnapshot = querySnapshot.docs[0];
+        currentArticleId = docSnapshot.id;
         
-        const article = doc.data();
+        const article = docSnapshot.data();
         
         // Incrémenter les vues
-        await db.collection('articles').doc(doc.id).update({
-            views: firebase.firestore.FieldValue.increment(1)
+        const articleRef = doc(db, 'articles', docSnapshot.id);
+        await updateDoc(articleRef, {
+            views: increment(1)
         }).catch(err => console.warn('Erreur incrémentation vues:', err));
         
         // Afficher l'article
@@ -153,8 +171,8 @@ async function loadArticleBySlug(slug) {
         
         // Charger les données supplémentaires
         await Promise.all([
-            loadReactions(doc.id),
-            loadComments(doc.id),
+            loadReactions(docSnapshot.id),
+            loadComments(docSnapshot.id),
             loadRelatedArticles(article.category)
         ]);
         
@@ -180,64 +198,19 @@ async function loadArticleById(id) {
     currentArticleId = id;
     
     try {
-        const doc = await db.collection('articles').doc(id).get();
+        const docRef = doc(db, 'articles', id);
+        const docSnapshot = await getDoc(docRef);
         
-        if (!doc.exists) {
+        if (!docSnapshot.exists()) {
             showError();
             return;
         }
         
-        const article = doc.data();
+        const article = docSnapshot.data();
         
         // Incrémenter les vues
-        await db.collection('articles').doc(id).update({
-            views: firebase.firestore.FieldValue.increment(1)
-        }).catch(err => console.warn('Erreur incrémentation vues:', err));
-        
-        // Afficher l'article
-        displayArticle(article);
-        
-        // Charger les données supplémentaires
-        await Promise.all([
-            loadReactions(id),
-            loadComments(id),
-            loadRelatedArticles(article.category)
-        ]);
-        
-        // Cacher le loading, afficher le contenu
-        loadingState.classList.add('hidden');
-        articleContainer.classList.remove('hidden');
-        
-        // Mettre à jour le titre et métadonnées
-        updatePageMeta(article);
-        
-    } catch (error) {
-        console.error('Erreur lors du chargement:', error);
-        showError();
-        showNotification('Erreur de chargement de l\'article', 'error');
-    }
-}
-
-// ============================================
-// CHARGEMENT ARTICLE
-// ============================================
-
-async function loadArticle(id) {
-    currentArticleId = id;
-    
-    try {
-        const doc = await db.collection('articles').doc(id).get();
-        
-        if (!doc.exists) {
-            showError();
-            return;
-        }
-        
-        const article = doc.data();
-        
-        // Incrémenter les vues
-        await db.collection('articles').doc(id).update({
-            views: firebase.firestore.FieldValue.increment(1)
+        await updateDoc(docRef, {
+            views: increment(1)
         }).catch(err => console.warn('Erreur incrémentation vues:', err));
         
         // Afficher l'article
@@ -269,340 +242,225 @@ async function loadArticle(id) {
 // ============================================
 
 function displayArticle(article) {
-    try {
-        // Image avec fallback
-        const imgUrl = article.imageUrl || 'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?w=1200&q=80';
-        const articleImage = document.getElementById('articleImage');
-        if (articleImage) {
-            articleImage.src = imgUrl;
-            articleImage.alt = article.title || 'Image de l\'article';
-        }
-        
-        // Titre
-        const articleTitle = document.getElementById('articleTitle');
-        if (articleTitle) {
-            articleTitle.textContent = article.title || 'Sans titre';
-        }
-        
-        // Catégorie
-        const categoryBadge = document.getElementById('articleCategory');
-        if (categoryBadge) {
-            categoryBadge.textContent = article.category || 'Général';
-            categoryBadge.className = `article-category-badge category-${getCategoryClass(article.category)}`;
-        }
-        
-        // Date
-        const articleDate = document.getElementById('articleDate');
-        if (articleDate) {
-            const date = article.createdAt 
-                ? new Date(article.createdAt.toDate()).toLocaleDateString('fr-FR', { 
-                    day: 'numeric', 
-                    month: 'long', 
-                    year: 'numeric' 
-                })
-                : 'Date inconnue';
-            articleDate.textContent = date;
-        }
-        
-        // Temps de lecture
-        const readTime = calculateReadingTime(article.content || '');
-        const articleReadTime = document.getElementById('articleReadTime');
-        if (articleReadTime) {
-            articleReadTime.textContent = `${readTime} min de lecture`;
-        }
-        
-        // Vues
-        const articleViews = document.getElementById('articleViews');
-        if (articleViews) {
-            articleViews.textContent = (article.views || 0) + 1;
-        }
-        
-        // Résumé
-        const articleSummary = document.getElementById('articleSummary');
-        if (articleSummary) {
-            articleSummary.textContent = article.summary || '';
-        }
-        
-        // Contenu
-        const articleBody = document.getElementById('articleBody');
-        if (articleBody) {
-            articleBody.innerHTML = formatArticleContent(article.content || '');
-        }
-        
-        // Tags
-        displayTags(article.tags || []);
-        
-    } catch (error) {
-        console.error('Erreur affichage article:', error);
-        showNotification('Erreur d\'affichage de l\'article', 'error');
+    // Titre
+    document.getElementById('articleTitle').textContent = article.title || 'Sans titre';
+    
+    // Catégorie
+    const categoryBadge = document.getElementById('categoryBadge');
+    categoryBadge.textContent = article.category || 'GÉNÉRAL';
+    categoryBadge.className = `category-badge ${getCategoryClass(article.category)}`;
+    
+    // Date
+    let dateText = 'Date inconnue';
+    if (article.createdAt) {
+        const date = article.createdAt.toDate();
+        dateText = new Intl.DateTimeFormat('fr-FR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        }).format(date);
+    }
+    document.getElementById('articleDate').textContent = dateText;
+    
+    // Auteur
+    const authorName = article.author?.name || article.author?.email || 'Auteur inconnu';
+    document.getElementById('authorName').textContent = authorName;
+    
+    // Avatar
+    const authorAvatar = document.getElementById('authorAvatar');
+    if (article.author?.photoURL) {
+        authorAvatar.src = article.author.photoURL;
+    } else {
+        authorAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(authorName)}&background=1e40af&color=fff`;
+    }
+    
+    // Temps de lecture
+    const readingTime = calculateReadingTime(article.content);
+    document.getElementById('readingTime').textContent = `${readingTime} min de lecture`;
+    
+    // Vues
+    document.getElementById('viewsCount').textContent = (article.views || 0).toLocaleString();
+    
+    // Image
+    const articleImage = document.getElementById('articleImage');
+    if (article.imageUrl) {
+        articleImage.src = article.imageUrl;
+        articleImage.alt = article.title;
+    } else {
+        articleImage.parentElement.style.display = 'none';
+    }
+    
+    // Contenu
+    document.getElementById('articleContent').innerHTML = article.content || '<p>Contenu non disponible</p>';
+    
+    // Tags
+    const tagsContainer = document.getElementById('tagsContainer');
+    if (article.tags && article.tags.length > 0) {
+        tagsContainer.innerHTML = article.tags.map(tag => 
+            `<span class="tag">#${escapeHtml(tag)}</span>`
+        ).join('');
+    } else {
+        tagsContainer.innerHTML = '';
     }
 }
 
 // ============================================
-// FORMATAGE DU CONTENU - VERSION CORRIGÉE
-// ============================================
-
-function formatArticleContent(content) {
-    if (!content) return '<p>Contenu indisponible.</p>';
-    
-    // ✅ CORRECTION : Vérifier si le contenu contient des balises HTML (venant de Quill)
-    if (content.includes('<p>') || content.includes('<h1>') || content.includes('<h2>') || 
-        content.includes('<h3>') || content.includes('<strong>') || content.includes('<em>') ||
-        content.includes('<ul>') || content.includes('<ol>') || content.includes('<blockquote>')) {
-        
-        // C'est du contenu Quill formaté
-        // Mais on doit quand même traiter les URLs d'images qui sont dans des paragraphes
-        let processedContent = content;
-        
-        // Détecter et remplacer les URLs d'images dans les paragraphes
-        processedContent = processedContent.replace(/<p>(https?:\/\/[^<]+?\.(jpg|jpeg|png|gif|webp|bmp|svg)[^<]*?)<\/p>/gi, (match, url) => {
-            return `<img src="${url}" alt="Image de l'article" class="content-image" loading="lazy" decoding="async">`;
-        });
-        
-        // Détecter les URLs spéciales (unsplash, pexels, blog-cdn, etc.) dans les paragraphes
-        processedContent = processedContent.replace(/<p>(https?:\/\/[^<]*?(unsplash|pexels|pixabay|imgur|cloudinary|bing\.com\/th|blog-cdn\.athom\.com)[^<]*?)<\/p>/gi, (match, url) => {
-            return `<img src="${url}" alt="Image de l'article" class="content-image" loading="lazy" decoding="async">`;
-        });
-        
-        // Détecter et remplacer les vidéos YouTube dans les paragraphes
-        processedContent = processedContent.replace(/<p>(https?:\/\/(www\.)?(youtube\.com|youtu\.be)[^<]+?)<\/p>/gi, (match, url) => {
-            return formatYouTubeVideo(url);
-        });
-        
-        return processedContent;
-    }
-    
-    // Sinon, c'est du texte brut (ancien format), on le traite ligne par ligne
-    const lines = content.split('\n').filter(line => line.trim());
-    
-    return lines.map(line => {
-        line = line.trim();
-        
-        // Détection YouTube
-        if (line.match(/^https?:\/\/(www\.)?(youtube\.com|youtu\.be)/i)) {
-            return formatYouTubeVideo(line);
-        }
-        
-        // Détection image
-        if (isImageUrl(line)) {
-            return `<img src="${escapeHtml(line)}" alt="Image de l'article" class="content-image" loading="lazy" decoding="async">`;
-        }
-        
-        // Lien standard
-        if (line.match(/^https?:\/\//i)) {
-            return `<p><a href="${escapeHtml(line)}" target="_blank" rel="noopener noreferrer" class="content-link">${escapeHtml(line)}</a></p>`;
-        }
-        
-        // Texte avec liens intégrés
-        if (line.includes('http')) {
-            return `<p>${autoLinkUrls(line)}</p>`;
-        }
-        
-        // Texte normal
-        return `<p>${escapeHtml(line)}</p>`;
-    }).join('');
-}
-
-function isImageUrl(url) {
-    return /\.(jpg|jpeg|png|gif|webp|bmp|svg)(\?.*)?$/i.test(url) ||
-           /(unsplash|pexels|pixabay|imgur|cloudinary|bing\.com\/th|blog-cdn\.athom\.com)/.test(url);
-}
-
-function formatYouTubeVideo(url) {
-    const match = url.match(/(?:v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
-    if (!match) return '';
-    
-    return `<div class="video-container">
-        <iframe 
-            src="https://www.youtube.com/embed/${match[1]}" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-            allowfullscreen
-            loading="lazy"
-            title="Vidéo YouTube">
-        </iframe>
-    </div>`;
-}
-
-function autoLinkUrls(text) {
-    return escapeHtml(text).replace(
-        /(https?:\/\/[^\s]+)/g, 
-        '<a href="$1" target="_blank" rel="noopener noreferrer" class="content-link">$1</a>'
-    );
-}
-
-// ============================================
-// AFFICHAGE DES TAGS
-// ============================================
-
-function displayTags(tags) {
-    const container = document.getElementById('articleTags');
-    if (!container) return;
-    
-    if (!tags || tags.length === 0) {
-        container.innerHTML = '';
-        return;
-    }
-    
-    container.innerHTML = `
-        <h3 class="tags-section-title">
-            <i class="fas fa-tags mr-2" aria-hidden="true"></i>Tags
-        </h3>
-        <div class="tags-list">
-            ${tags.map(tag => `<span class="tag-badge">${escapeHtml(tag)}</span>`).join('')}
-        </div>
-    `;
-}
-
-// ============================================
-// GESTION DES RÉACTIONS
+// RÉACTIONS
 // ============================================
 
 async function loadReactions(articleId) {
     try {
-        const doc = await db.collection('articles').doc(articleId).get();
-        if (!doc.exists) return;
+        const reactionsRef = doc(db, 'reactions', articleId);
+        const reactionsDoc = await getDoc(reactionsRef);
         
-        const reactions = doc.data().reactions || { like: 0, love: 0, star: 0 };
-        
-        const likeCount = document.getElementById('likeCount');
-        const loveCount = document.getElementById('loveCount');
-        const starCount = document.getElementById('starCount');
-        
-        if (likeCount) likeCount.textContent = reactions.like || 0;
-        if (loveCount) loveCount.textContent = reactions.love || 0;
-        if (starCount) starCount.textContent = reactions.star || 0;
-        
-        // Vérifier si l'utilisateur a déjà réagi
-        const userReaction = userReactions[articleId];
-        if (userReaction) {
-            const btn = document.getElementById(`${userReaction}Btn`);
-            if (btn) btn.classList.add('active');
+        if (reactionsDoc.exists()) {
+            const data = reactionsDoc.data();
+            
+            document.getElementById('likeCount').textContent = data.like || 0;
+            document.getElementById('loveCount').textContent = data.love || 0;
+            document.getElementById('insightCount').textContent = data.insight || 0;
+            document.getElementById('supportCount').textContent = data.support || 0;
+            
+            // Mettre à jour l'état des boutons
+            updateReactionButtons(articleId);
         }
-        
     } catch (error) {
         console.error('Erreur chargement réactions:', error);
-        showNotification('Erreur de chargement des réactions', 'error');
     }
 }
 
+function updateReactionButtons(articleId) {
+    const userToken = initUserToken();
+    const userReaction = userReactions[articleId];
+    
+    document.querySelectorAll('.reaction-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (userReaction && btn.dataset.reaction === userReaction) {
+            btn.classList.add('active');
+        }
+    });
+}
+
 async function handleReaction(e) {
+    const btn = e.currentTarget;
+    const reaction = btn.dataset.reaction;
+    
     if (!currentArticleId) return;
     
-    const button = e.currentTarget;
-    const reaction = button.dataset.reaction;
+    const userToken = initUserToken();
     const previousReaction = userReactions[currentArticleId];
     
     try {
-        const articleRef = db.collection('articles').doc(currentArticleId);
+        const reactionsRef = doc(db, 'reactions', currentArticleId);
+        const reactionsDoc = await getDoc(reactionsRef);
         
-        // Retirer ancienne réaction
-        if (previousReaction) {
-            await articleRef.update({
-                [`reactions.${previousReaction}`]: firebase.firestore.FieldValue.increment(-1)
-            });
-            const prevBtn = document.getElementById(`${previousReaction}Btn`);
-            if (prevBtn) prevBtn.classList.remove('active');
-        }
+        let updateData = {};
         
-        // Ajouter nouvelle réaction (sauf si même réaction)
-        if (previousReaction !== reaction) {
-            await articleRef.update({
-                [`reactions.${reaction}`]: firebase.firestore.FieldValue.increment(1)
-            });
-            userReactions[currentArticleId] = reaction;
-            button.classList.add('active');
-        } else {
+        // Si c'est la même réaction, on la retire
+        if (previousReaction === reaction) {
+            updateData[reaction] = increment(-1);
             delete userReactions[currentArticleId];
+        } else {
+            // Nouvelle réaction
+            updateData[reaction] = increment(1);
+            
+            // Retirer l'ancienne réaction si elle existe
+            if (previousReaction) {
+                updateData[previousReaction] = increment(-1);
+            }
+            
+            userReactions[currentArticleId] = reaction;
         }
         
+        // Mettre à jour Firestore
+        if (reactionsDoc.exists()) {
+            await updateDoc(reactionsRef, updateData);
+        } else {
+            // Créer le document s'il n'existe pas
+            const initialData = { like: 0, love: 0, insight: 0, support: 0 };
+            initialData[reaction] = 1;
+            await updateDoc(reactionsRef, initialData);
+        }
+        
+        // Sauvegarder localement
         saveUserReactions();
+        
+        // Recharger les réactions
         await loadReactions(currentArticleId);
         
     } catch (error) {
         console.error('Erreur réaction:', error);
-        showNotification('Erreur lors de la réaction', 'error');
+        showNotification('Erreur lors de l\'enregistrement de la réaction', 'error');
     }
 }
 
 // ============================================
-// GESTION DES COMMENTAIRES
+// COMMENTAIRES
 // ============================================
 
 async function loadComments(articleId) {
     try {
-        const snapshot = await db.collection('articles').doc(articleId)
-            .collection('comments')
-            .orderBy('createdAt', 'desc')
-            .limit(50)
-            .get();
+        const commentsRef = collection(db, 'comments');
+        const q = query(
+            commentsRef,
+            where('articleId', '==', articleId),
+            orderBy('createdAt', 'desc')
+        );
+        const querySnapshot = await getDocs(q);
         
         const commentsList = document.getElementById('commentsList');
         const commentsCount = document.getElementById('commentsCount');
         
-        if (commentsCount) {
-            commentsCount.textContent = snapshot.size;
-        }
+        commentsCount.textContent = querySnapshot.size;
         
-        if (!commentsList) return;
-        
-        if (snapshot.empty) {
-            commentsList.innerHTML = '<p class="no-comments">Aucun commentaire pour le moment. Soyez le premier à partager votre avis !</p>';
+        if (querySnapshot.empty) {
+            commentsList.innerHTML = '<p class="empty-text">Aucun commentaire pour le moment. Soyez le premier à commenter !</p>';
             return;
         }
         
         commentsList.innerHTML = '';
-        snapshot.forEach(doc => {
+        
+        querySnapshot.forEach(doc => {
             const comment = doc.data();
-            const commentEl = createCommentElement(comment, doc.id);
-            commentsList.appendChild(commentEl);
+            const commentDiv = createCommentElement(comment);
+            commentsList.appendChild(commentDiv);
         });
         
     } catch (error) {
         console.error('Erreur chargement commentaires:', error);
-        showNotification('Erreur de chargement des commentaires', 'error');
+        document.getElementById('commentsList').innerHTML = '<p class="empty-text">Erreur de chargement des commentaires</p>';
     }
 }
 
-function createCommentElement(comment, commentId) {
+function createCommentElement(comment) {
     const div = document.createElement('div');
-    div.className = 'comment-item fade-in';
-    div.setAttribute('data-comment-id', commentId);
+    div.className = 'comment';
     
-    const date = comment.createdAt 
-        ? new Date(comment.createdAt.toDate()).toLocaleDateString('fr-FR', {
-            day: 'numeric',
-            month: 'short',
+    let dateText = 'Date inconnue';
+    if (comment.createdAt) {
+        const date = comment.createdAt.toDate();
+        dateText = new Intl.DateTimeFormat('fr-FR', {
             year: 'numeric',
+            month: 'long',
+            day: 'numeric',
             hour: '2-digit',
             minute: '2-digit'
-        })
-        : 'Date inconnue';
-    
-    const userToken = localStorage.getItem('userToken');
-    const isUserComment = comment.userToken === userToken;
-    
-    const actionsHtml = isUserComment ? `
-        <div class="comment-actions">
-            <button class="comment-action-btn edit-btn" onclick="editComment('${commentId}', this)" title="Modifier" aria-label="Modifier le commentaire">
-                <i class="fas fa-edit" aria-hidden="true"></i>
-            </button>
-            <button class="comment-action-btn delete-btn" onclick="deleteComment('${commentId}')" title="Supprimer" aria-label="Supprimer le commentaire">
-                <i class="fas fa-trash" aria-hidden="true"></i>
-            </button>
-        </div>
-    ` : '';
+        }).format(date);
+    }
     
     div.innerHTML = `
-        <div class="comment-avatar" aria-hidden="true">${escapeHtml(comment.name.charAt(0).toUpperCase())}</div>
-        <div class="comment-content">
-            <div class="comment-header">
-                <span class="comment-author">${escapeHtml(comment.name)}</span>
-                <span class="comment-date">${date}</span>
+        <div class="comment-header">
+            <div class="comment-author">
+                <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(comment.authorName || 'Anonyme')}&background=1e40af&color=fff" 
+                     alt="${escapeHtml(comment.authorName || 'Anonyme')}" 
+                     class="comment-avatar">
+                <div>
+                    <strong>${escapeHtml(comment.authorName || 'Anonyme')}</strong>
+                    <span class="comment-date">${dateText}</span>
+                </div>
             </div>
-            <p class="comment-text">${escapeHtml(comment.text)}</p>
-            ${actionsHtml}
         </div>
+        <p class="comment-text">${escapeHtml(comment.text)}</p>
     `;
     
     return div;
@@ -611,432 +469,292 @@ function createCommentElement(comment, commentId) {
 async function submitComment(e) {
     e.preventDefault();
     
-    if (!currentArticleId) return;
-    
     const nameInput = document.getElementById('commentName');
+    const emailInput = document.getElementById('commentEmail');
     const textInput = document.getElementById('commentText');
     
-    if (!nameInput || !textInput) return;
-    
     const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
     const text = textInput.value.trim();
     
-    if (!name || !text) {
+    if (!name || !email || !text) {
         showNotification('Veuillez remplir tous les champs', 'error');
         return;
     }
     
-    if (name.length > 100) {
-        showNotification('Le nom est trop long (max 100 caractères)', 'error');
-        return;
-    }
-    
-    if (text.length > 1000) {
-        showNotification('Le commentaire est trop long (max 1000 caractères)', 'error');
-        return;
-    }
-    
-    const userToken = localStorage.getItem('userToken');
-    
     try {
-        await db.collection('articles').doc(currentArticleId)
-            .collection('comments')
-            .add({
-                name,
-                text,
-                userToken,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
+        const commentsRef = collection(db, 'comments');
+        await addDoc(commentsRef, {
+            articleId: currentArticleId,
+            authorName: name,
+            authorEmail: email,
+            text: text,
+            createdAt: serverTimestamp()
+        });
         
-        await db.collection('articles').doc(currentArticleId).update({
-            commentsCount: firebase.firestore.FieldValue.increment(1)
-        }).catch(err => console.warn('Erreur incrémentation commentaires:', err));
+        // Réinitialiser le formulaire
+        nameInput.value = '';
+        emailInput.value = '';
+        textInput.value = '';
         
-        e.target.reset();
+        showNotification('Commentaire ajouté avec succès !', 'success');
+        
+        // Recharger les commentaires
         await loadComments(currentArticleId);
-        showNotification('Commentaire publié avec succès ! 🎉', 'success');
-        
-        const commentsSection = document.getElementById('comments');
-        if (commentsSection) {
-            commentsSection.scrollIntoView({ behavior: 'smooth' });
-        }
         
     } catch (error) {
-        console.error('Erreur:', error);
-        showNotification('Erreur lors de la publication du commentaire', 'error');
-    }
-}
-
-async function editComment(commentId, button) {
-    const commentItem = button.closest('.comment-item');
-    if (!commentItem) return;
-    
-    const commentTextEl = commentItem.querySelector('.comment-text');
-    if (!commentTextEl) return;
-    
-    const currentText = commentTextEl.textContent;
-    
-    const editForm = document.createElement('div');
-    editForm.className = 'comment-edit-form';
-    editForm.innerHTML = `
-        <textarea class="comment-textarea" rows="3" maxlength="1000" aria-label="Modifier votre commentaire">${escapeHtml(currentText)}</textarea>
-        <div class="comment-edit-actions">
-            <button class="btn-save-comment" onclick="saveCommentEdit('${commentId}', this)">
-                <i class="fas fa-check mr-1" aria-hidden="true"></i>Enregistrer
-            </button>
-            <button class="btn-cancel-comment" onclick="cancelCommentEdit(this)">
-                <i class="fas fa-times mr-1" aria-hidden="true"></i>Annuler
-            </button>
-        </div>
-    `;
-    
-    commentTextEl.replaceWith(editForm);
-    
-    const actionsDiv = commentItem.querySelector('.comment-actions');
-    if (actionsDiv) {
-        actionsDiv.style.display = 'none';
-    }
-}
-
-async function saveCommentEdit(commentId, button) {
-    const editForm = button.closest('.comment-edit-form');
-    if (!editForm) return;
-    
-    const textarea = editForm.querySelector('textarea');
-    if (!textarea) return;
-    
-    const newText = textarea.value.trim();
-    
-    if (!newText) {
-        showNotification('Le commentaire ne peut pas être vide', 'error');
-        return;
-    }
-    
-    if (newText.length > 1000) {
-        showNotification('Le commentaire est trop long (max 1000 caractères)', 'error');
-        return;
-    }
-    
-    try {
-        await db.collection('articles').doc(currentArticleId)
-            .collection('comments')
-            .doc(commentId)
-            .update({
-                text: newText,
-                editedAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-        
-        await loadComments(currentArticleId);
-        showNotification('Commentaire modifié avec succès !', 'success');
-        
-    } catch (error) {
-        console.error('Erreur:', error);
-        showNotification('Erreur lors de la modification', 'error');
-    }
-}
-
-function cancelCommentEdit(button) {
-    loadComments(currentArticleId);
-}
-
-async function deleteComment(commentId) {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?')) {
-        return;
-    }
-    
-    try {
-        await db.collection('articles').doc(currentArticleId)
-            .collection('comments')
-            .doc(commentId)
-            .delete();
-        
-        await db.collection('articles').doc(currentArticleId).update({
-            commentsCount: firebase.firestore.FieldValue.increment(-1)
-        }).catch(err => console.warn('Erreur décrémentation commentaires:', err));
-        
-        await loadComments(currentArticleId);
-        showNotification('Commentaire supprimé avec succès !', 'success');
-        
-    } catch (error) {
-        console.error('Erreur:', error);
-        showNotification('Erreur lors de la suppression', 'error');
+        console.error('Erreur ajout commentaire:', error);
+        showNotification('Erreur lors de l\'ajout du commentaire', 'error');
     }
 }
 
 // ============================================
-// ARTICLES SIMILAIRES
+// ARTICLES CONNEXES
 // ============================================
 
 async function loadRelatedArticles(category) {
-    const container = document.getElementById('relatedArticles');
-    if (!container) return;
-    
     try {
-        const snapshot = await db.collection('articles')
-            .where('category', '==', category)
-            .orderBy('createdAt', 'desc')
-            .limit(4)
-            .get();
+        const articlesRef = collection(db, 'articles');
+        const q = query(
+            articlesRef,
+            where('category', '==', category),
+            orderBy('createdAt', 'desc'),
+            limit(4)
+        );
+        const querySnapshot = await getDocs(q);
         
-        if (snapshot.empty) {
-            container.innerHTML = '<p class="no-related">Aucun article similaire pour le moment.</p>';
+        const relatedContainer = document.getElementById('relatedArticles');
+        
+        if (querySnapshot.size <= 1) {
+            relatedContainer.parentElement.style.display = 'none';
             return;
         }
         
-        const relatedArticles = [];
-        snapshot.forEach(doc => {
-            if (doc.id !== currentArticleId) {
-                relatedArticles.push({ id: doc.id, data: doc.data() });
-            }
+        relatedContainer.innerHTML = '';
+        
+        querySnapshot.forEach(doc => {
+            if (doc.id === currentArticleId) return; // Skip l'article actuel
+            
+            const article = doc.data();
+            const articleCard = createRelatedArticleCard(doc.id, article);
+            relatedContainer.appendChild(articleCard);
         });
         
-        if (relatedArticles.length === 0) {
-            container.innerHTML = '<p class="no-related">Aucun article similaire pour le moment.</p>';
-            return;
-        }
-        
-        const limitedArticles = relatedArticles.slice(0, 3);
-        
-        container.innerHTML = limitedArticles
-            .map(item => createRelatedArticleHTML(item.id, item.data))
-            .join('');
-        
     } catch (error) {
-        console.error('Erreur chargement articles similaires:', error);
-        container.innerHTML = '<p class="no-related">Erreur de chargement</p>';
+        console.error('Erreur articles connexes:', error);
     }
 }
 
-function createRelatedArticleHTML(id, article) {
-    const imgUrl = article.imageUrl || 'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?w=400&q=80';
-    const title = article.title || 'Sans titre';
+function createRelatedArticleCard(id, article) {
+    const div = document.createElement('div');
+    div.className = 'related-article-card';
     
-    return `
-        <div class="related-article-item">
-            <img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(title)}" class="related-article-img" loading="lazy" decoding="async">
+    const slug = article.slug || id;
+    const link = `/article/${slug}`;
+    
+    let dateText = '';
+    if (article.createdAt) {
+        const date = article.createdAt.toDate();
+        dateText = new Intl.DateTimeFormat('fr-FR', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        }).format(date);
+    }
+    
+    div.innerHTML = `
+        <a href="${link}" class="related-article-link">
+            ${article.imageUrl ? `
+                <img src="${escapeHtml(article.imageUrl)}" 
+                     alt="${escapeHtml(article.title)}" 
+                     class="related-article-image">
+            ` : ''}
             <div class="related-article-content">
-                <h4 class="related-article-title">${escapeHtml(title)}</h4>
-                <a href="article.html?id=${id}" class="related-article-link">
-                    Lire l'article <i class="fas fa-arrow-right" aria-hidden="true"></i>
-                </a>
+                <span class="category-badge ${getCategoryClass(article.category)}">${escapeHtml(article.category)}</span>
+                <h4>${escapeHtml(article.title)}</h4>
+                ${dateText ? `<span class="related-article-date">${dateText}</span>` : ''}
             </div>
-        </div>
+        </a>
     `;
-}
-
-// ============================================
-// PARTAGE SOCIAL
-// ============================================
-
-function shareArticle(platform) {
-    const title = document.getElementById('articleTitle')?.textContent || 'Article';
-    const url = window.location.href;
     
-    const shareUrls = {
-        facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-        twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`,
-        linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
-        whatsapp: `https://wa.me/?text=${encodeURIComponent(title + ' ' + url)}`
-    };
-    
-    const shareUrl = shareUrls[platform];
-    if (shareUrl) {
-        window.open(shareUrl, '_blank', 'width=600,height=400,noopener,noreferrer');
-    }
-}
-
-function copyArticleLink() {
-    const url = window.location.href;
-    
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(url)
-            .then(() => showNotification('Lien copié ! 📋', 'success'))
-            .catch(() => fallbackCopyToClipboard(url));
-    } else {
-        fallbackCopyToClipboard(url);
-    }
-}
-
-function fallbackCopyToClipboard(text) {
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    textarea.style.position = 'fixed';
-    textarea.style.opacity = '0';
-    document.body.appendChild(textarea);
-    textarea.select();
-    
-    try {
-        document.execCommand('copy');
-        showNotification('Lien copié ! 📋', 'success');
-    } catch (err) {
-        showNotification('Impossible de copier le lien', 'error');
-    }
-    
-    document.body.removeChild(textarea);
+    return div;
 }
 
 // ============================================
 // NEWSLETTER
 // ============================================
 
-function openNewsletterModal() {
-    if (newsletterModal) {
-        newsletterModal.classList.remove('hidden');
-        const emailInput = document.getElementById('newsletterEmail');
-        if (emailInput) {
-            setTimeout(() => emailInput.focus(), 100);
+async function submitNewsletter(e) {
+    e.preventDefault();
+    
+    const emailInput = document.getElementById('newsletterEmail');
+    const email = emailInput.value.trim().toLowerCase();
+    
+    if (!email) {
+        showNotification('Veuillez entrer un email valide', 'error');
+        return;
+    }
+    
+    try {
+        // Vérifier si l'email existe déjà
+        const newsletterRef = collection(db, 'newsletter');
+        const q = query(newsletterRef, where('email', '==', email));
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+            showNotification('Cet email est déjà inscrit !', 'info');
+            closeNewsletterModal();
+            return;
         }
+        
+        // Ajouter l'email
+        await addDoc(newsletterRef, {
+            email: email,
+            subscribedAt: serverTimestamp(),
+            source: 'article_page'
+        });
+        
+        emailInput.value = '';
+        showNotification('Merci pour votre inscription !', 'success');
+        closeNewsletterModal();
+        
+    } catch (error) {
+        console.error('Erreur inscription newsletter:', error);
+        showNotification('Erreur lors de l\'inscription', 'error');
     }
 }
 
 function closeNewsletterModal() {
     if (newsletterModal) {
         newsletterModal.classList.add('hidden');
-        const form = document.getElementById('newsletterForm');
-        if (form) {
-            form.reset();
-        }
-    }
-}
-
-async function submitNewsletter(e) {
-    e.preventDefault();
-    
-    const emailInput = document.getElementById('newsletterEmail');
-    if (!emailInput) return;
-    
-    const email = emailInput.value.trim();
-    
-    if (!email) {
-        showNotification('Veuillez entrer votre email', 'error');
-        return;
-    }
-    
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        showNotification('Veuillez entrer un email valide', 'error');
-        return;
-    }
-    
-    try {
-        const existingEmails = await db.collection('newsletter')
-            .where('email', '==', email)
-            .limit(1)
-            .get();
-        
-        if (!existingEmails.empty) {
-            showNotification('Vous êtes déjà inscrit à notre newsletter !', 'info');
-            closeNewsletterModal();
-            return;
-        }
-        
-        await db.collection('newsletter').add({
-            email: email,
-            subscribedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            source: 'article'
-        });
-        
-        showNotification('Merci pour votre inscription ! 🎉', 'success');
-        closeNewsletterModal();
-        
-    } catch (error) {
-        console.error('Erreur lors de l\'inscription:', error);
-        showNotification('Erreur lors de l\'inscription. Veuillez réessayer.', 'error');
     }
 }
 
 // ============================================
-// THÈME SOMBRE
+// PARTAGE
+// ============================================
+
+function copyLink() {
+    const url = window.location.href;
+    
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(() => {
+            showNotification('Lien copié !', 'success');
+        }).catch(err => {
+            console.error('Erreur copie:', err);
+            showNotification('Erreur lors de la copie', 'error');
+        });
+    } else {
+        // Fallback pour les anciens navigateurs
+        const input = document.createElement('input');
+        input.value = url;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        showNotification('Lien copié !', 'success');
+    }
+}
+
+// ============================================
+// THÈME
 // ============================================
 
 function toggleTheme() {
-    document.body.classList.toggle('dark-theme');
-    const isDark = document.body.classList.contains('dark-theme');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     
-    const icon = themeToggle?.querySelector('i');
-    if (icon) {
-        icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    // Mettre à jour l'icône
+    const icon = themeToggle.querySelector('i');
+    if (newTheme === 'dark') {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+    } else {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
     }
 }
 
 function loadTheme() {
-    const theme = localStorage.getItem('theme');
-    if (theme === 'dark') {
-        document.body.classList.add('dark-theme');
-        const icon = themeToggle?.querySelector('i');
-        if (icon) {
-            icon.className = 'fas fa-sun';
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    if (themeToggle) {
+        const icon = themeToggle.querySelector('i');
+        if (savedTheme === 'dark') {
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
         }
     }
 }
 
 // ============================================
-// MÉTADONNÉES PAGE
+// MÉTADONNÉES
 // ============================================
 
 function updatePageMeta(article) {
-    // Mettre à jour le titre de la page
-    document.title = `${article.title || 'Article'} | Électro-Actu`;
+    // Titre
+    document.title = `${article.title} | Électro-Actu`;
     
-    // Mettre à jour la description meta
-    updateMetaTag('description', article.summary, 'name');
+    // Description
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+        metaDesc.setAttribute('content', article.summary || article.title);
+    }
     
     // Open Graph
-    updateMetaTag('og:title', article.title, 'property');
-    updateMetaTag('og:description', article.summary, 'property');
-    updateMetaTag('og:image', article.imageUrl || 'https://electroinfo.online/images/logo.png', 'property');
-    updateMetaTag('og:url', window.location.href, 'property');
-    updateMetaTag('og:type', 'article', 'property');
-    updateMetaTag('og:site_name', 'Électro-Actu', 'property');
+    updateMetaTag('og:title', article.title);
+    updateMetaTag('og:description', article.summary || article.title);
+    if (article.imageUrl) {
+        updateMetaTag('og:image', article.imageUrl);
+    }
+    updateMetaTag('og:url', window.location.href);
     
-    // Twitter Card
-    updateMetaTag('twitter:card', 'summary_large_image', 'name');
-    updateMetaTag('twitter:title', article.title, 'name');
-    updateMetaTag('twitter:description', article.summary, 'name');
-    updateMetaTag('twitter:image', article.imageUrl || 'https://electroinfo.online/images/logo.png', 'name');
+    // Twitter
+    updateMetaTag('twitter:title', article.title);
+    updateMetaTag('twitter:description', article.summary || article.title);
+    if (article.imageUrl) {
+        updateMetaTag('twitter:image', article.imageUrl);
+    }
     
-    // Ajouter les données structurées JSON-LD pour un meilleur SEO
-    updateStructuredData(article);
+    // Structured Data
+    addStructuredData(article);
 }
 
-function updateMetaTag(property, content, attributeType = 'property') {
-    if (!content) return;
-    
-    // Chercher la balise existante
-    let meta = document.querySelector(`meta[${attributeType}="${property}"]`);
-    
+function updateMetaTag(property, content) {
+    let meta = document.querySelector(`meta[property="${property}"]`);
+    if (!meta) {
+        meta = document.querySelector(`meta[name="${property}"]`);
+    }
     if (meta) {
-        // Mettre à jour le contenu existant
         meta.setAttribute('content', content);
     } else {
-        // Créer une nouvelle balise
         meta = document.createElement('meta');
-        meta.setAttribute(attributeType, property);
+        if (property.startsWith('og:') || property.startsWith('twitter:')) {
+            meta.setAttribute('property', property);
+        } else {
+            meta.setAttribute('name', property);
+        }
         meta.setAttribute('content', content);
         document.head.appendChild(meta);
     }
 }
 
-function updateStructuredData(article) {
-    // Supprimer l'ancien script JSON-LD s'il existe
-    const oldScript = document.querySelector('script[type="application/ld+json"]');
-    if (oldScript) {
-        oldScript.remove();
-    }
-    
-    // Créer les données structurées
+function addStructuredData(article) {
     const structuredData = {
         "@context": "https://schema.org",
         "@type": "Article",
         "headline": article.title,
-        "description": article.summary,
+        "description": article.summary || article.title,
         "image": article.imageUrl || "https://electroinfo.online/images/logo.png",
-        "datePublished": article.createdAt?.toDate?.()?.toISOString() || new Date().toISOString(),
+        "datePublished": article.createdAt ? article.createdAt.toDate().toISOString() : new Date().toISOString(),
         "author": {
             "@type": "Person",
-            "name": "Enoch",
-            "jobTitle": "Expert en Électricité Industrielle"
+            "name": article.author?.name || article.author?.email || "Électro-Actu"
         },
         "publisher": {
             "@type": "Organization",
@@ -1304,3 +1022,7 @@ if (mobileMenuToggle && navMenu) {
         }
     });
 }
+
+// Rendre certaines fonctions accessibles globalement
+window.copyLink = copyLink;
+window.closeNewsletterModal = closeNewsletterModal;
