@@ -28,9 +28,9 @@
     <meta name="twitter:description" content="Découvrez les dernières innovations en électricité industrielle">
     <meta name="twitter:image" content="https://electroinfo.online/images/logo.png">
     
-    <!-- Styles -->
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="admin-styles.css">
+    <!-- Styles - CHEMINS ABSOLUS -->
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/admin-styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 </head>
@@ -43,16 +43,15 @@
                 <span>ADMIN - ÉLECTRO-ACTU</span>
             </div>
             <div class="nav-actions">
-                <a href="index.html" class="btn btn-outline">
+                <a href="/index.html" class="btn btn-outline">
                     <i class="fas fa-home"></i> Accueil
                 </a>
                 <button id="logoutBtn" class="btn btn-danger">
                     <i class="fas fa-sign-out-alt"></i> Déconnexion
-                </div>
-            </div>
-
-            <div class="nav-actions">
-                <a href="admin_creer.html">créer un admin</a>
+                </button>
+                <a href="/admin_creer.html" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Créer un admin
+                </a>
             </div>
         </div>
     </nav>
@@ -72,7 +71,7 @@
             <h2>Accès Refusé</h2>
             <p>Vous n'avez pas les droits administrateur.</p>
             <p>Seuls les comptes avec le rôle "admin" peuvent accéder à cette page.</p>
-            <a href="index.html" class="btn btn-primary">
+            <a href="/index.html" class="btn btn-primary">
                 <i class="fas fa-home"></i> Retour à l'accueil
             </a>
         </div>
@@ -200,10 +199,10 @@
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-paper-plane"></i> <span id="submitBtnText">Publier</span>
-                            </div>
+                            </button>
                             <button type="button" class="btn btn-secondary" onclick="cancelEdit()">
                                 <i class="fas fa-redo"></i> Annuler
-                            </div>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -233,7 +232,7 @@
                     <div class="newsletter-actions">
                         <button onclick="exportNewsletterCSV()" class="btn btn-primary">
                             <i class="fas fa-download"></i> Exporter CSV
-                        </div>
+                        </button>
                     </div>
 
                     <div id="newsletterList">
@@ -259,10 +258,10 @@
                 <p class="text-danger">Cette action est irréversible.</p>
             </div>
             <div class="modal-footer">
-                <button id="cancelDelete" class="btn btn-secondary">Annuler</div>
+                <button id="cancelDelete" class="btn btn-secondary">Annuler</button>
                 <button id="confirmDelete" class="btn btn-danger">
                     <i class="fas fa-trash"></i> Supprimer
-                </div>
+                </button>
             </div>
         </div>
     </div>
@@ -274,5 +273,6 @@
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
     <!-- Firebase & Script -->
-    <script type="module" src="admin.js"></script>
+    <script type="module" src="/admin.js"></script>
 </body>
+</html>

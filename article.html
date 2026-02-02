@@ -32,14 +32,10 @@
     <meta name="twitter:image" content="https://electroinfo.online/images/logo.png">
     <meta name="twitter:site" content="@ElectroActu">
     
-    <!-- Styles -->
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="article-styles.css">
+    <!-- Styles - CHEMINS ABSOLUS -->
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/article-styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body id="top">
 
@@ -52,8 +48,8 @@
    <nav class="nav-header">
     <div class="nav-container">
         <div class="nav-content">
-            <div class="nav-logo" onclick="window.location.href='index.html'">
-                <img src="images/logo-small.png" alt="Électro-Actu" class="logo-image">
+            <div class="nav-logo" onclick="window.location.href='/index.html'">
+                <img src="/images/logo-small.png" alt="Électro-Actu" class="logo-image">
                 <span class="logo-text">ÉLECTRO-ACTU</span>
             </div>
             
@@ -63,18 +59,18 @@
             
             <div class="nav-menu" id="navMenu">
                 <div class="nav-links">
-                    <a href="index.html" class="nav-link">
+                    <a href="/index.html" class="nav-link">
                         <i class="fas fa-home mr-1"></i>Accueil
                     </a>
-                    <a href="index.html#nouveautes" class="nav-link">Nouveautés</a>
-                    <a href="index.html#innovations" class="nav-link">Innovations</a>
-                    <a href="index.html#securite" class="nav-link">Sécurité</a>
+                    <a href="/index.html#nouveautes" class="nav-link">Nouveautés</a>
+                    <a href="/index.html#innovations" class="nav-link">Innovations</a>
+                    <a href="/index.html#securite" class="nav-link">Sécurité</a>
                 </div>
                 <div class="nav-actions">
                     <button id="newsletterBtn" class="btn-newsletter" onclick="openNewsletterModal()">
                         <i class="fas fa-envelope mr-1"></i>Newsletter
                     </button>
-                    <a href="auth.html" class="btn-admin">
+                    <a href="/auth.html" class="btn-admin">
                         <i class="fas fa-user-shield mr-1"></i>Connexion
                     </a>
                 </div>
@@ -227,7 +223,7 @@
                         <a href="#comments" class="quick-nav-link">
                             <i class="fas fa-comments"></i> Commentaires
                         </a>
-                        <a href="index.html" class="quick-nav-link">
+                        <a href="/index.html" class="quick-nav-link">
                             <i class="fas fa-home"></i> Accueil
                         </a>
                     </div>
@@ -285,7 +281,7 @@
             <i class="fas fa-exclamation-triangle error-icon"></i>
             <h2 class="error-title">Article introuvable</h2>
             <p class="error-text">L'article que vous recherchez n'existe pas ou a été supprimé.</p>
-            <a href="index.html" class="btn-back-home">
+            <a href="/index.html" class="btn-back-home">
                 <i class="fas fa-home mr-2"></i>Retour à l'accueil
             </a>
         </div>
@@ -303,6 +299,7 @@
         </div>
     </footer>
 
-    <script src="article.js"></script>
+    <!-- Script ES6 Module -->
+    <script type="module" src="/article.js"></script>
 </body>
 </html>
