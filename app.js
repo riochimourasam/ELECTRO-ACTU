@@ -25,6 +25,11 @@ let currentPage = 1;
 const articlesPerPage = 6;
 let currentUser = null;
 
+// 🆕 AJOUT : Détection environnement local/production
+const isLocalDev = window.location.hostname === 'localhost' || 
+                   window.location.hostname === '127.0.0.1' ||
+                   window.location.port === '5500';
+
 // Éléments DOM
 const articlesGrid = document.getElementById('articlesGrid');
 const searchInput = document.getElementById('searchInput');
@@ -154,8 +159,10 @@ function createArticleCard(article) {
     const imgUrl = article.imageUrl || 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800';
     const categoryClass = getCategoryClass(article.category);
 
-    // 🆕 UTILISER LE SLUG AU LIEU DE L'ID
-    const articleUrl = article.slug ? `article/${article.slug}` : `article.html?id=${article.id}`;
+    // 🔧 MODIFIÉ : URLs adaptées selon l'environnement
+    const articleUrl = isLocalDev 
+        ? `article.html?id=${article.id}`
+        : (article.slug ? `article/${article.slug}` : `article.html?id=${article.id}`);
 
     return `
         <article class="article-card" onclick="window.location.href='${articleUrl}'">
@@ -229,6 +236,8 @@ function displayPagination() {
 }
 
 function changePage(page) {
+    const totalPages = Math.ceil(filteredArticles.length / articlesPerPage);
+    if (page < 1 || page > totalPages) return;
     currentPage = page;
     displayArticles();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -249,8 +258,10 @@ async function displayPopularArticles() {
         }
 
         popularArticles.innerHTML = popular.map((article, index) => {
-            // 🆕 UTILISER LE SLUG
-            const articleUrl = article.slug ? `article/${article.slug}` : `article.html?id=${article.id}`;
+            // 🔧 MODIFIÉ : URLs adaptées selon l'environnement
+            const articleUrl = isLocalDev 
+                ? `article.html?id=${article.id}`
+                : (article.slug ? `article/${article.slug}` : `article.html?id=${article.id}`);
             
             return `
                 <div class="popular-item" onclick="window.location.href='${articleUrl}'">
@@ -452,6 +463,9 @@ document.addEventListener('click', (e) => {
         }
     }
 });
+
+// 🆕 AJOUT : Message de debug
+console.log('🔧 Mode:', isLocalDev ? 'DÉVELOPPEMENT LOCAL (utilise ?id=xxx)' : 'PRODUCTION (utilise /article/slug)');
 
 // Initialisation
 document.addEventListener('DOMContentLoaded', loadArticles);

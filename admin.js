@@ -629,8 +629,4 @@ function showNotification(message, type = 'info') {
     setTimeout(() => {
         notification.classList.add('hidden');
     }, 3000);
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> ac69ac7a268ac024152dbb22a9c5032661399a07
