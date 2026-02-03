@@ -41,13 +41,20 @@ let reactionDebounceTimer = null;
 
 // Récupérer le SLUG depuis le path OU l'ID depuis les paramètres
 const pathParts = window.location.pathname.split('/');
-const articleSlug = pathParts[pathParts.length - 1]; // Dernier élément du path
+const lastPathElement = pathParts[pathParts.length - 1]; // Dernier élément du path
 const urlParams = new URLSearchParams(window.location.search);
 const articleId = urlParams.get('id');
 
 // Déterminer si on a un slug ou un ID
-const hasSlug = articleSlug && !articleSlug.includes('.html') && articleSlug !== '';
-const identifier = hasSlug ? articleSlug : articleId;
+// Un slug valide : ne contient pas .html, n'est pas vide, et n'est pas "article"
+const hasSlug = lastPathElement && 
+                !lastPathElement.includes('.html') && 
+                lastPathElement !== '' && 
+                lastPathElement !== 'article';
+
+// Prioriser l'ID si présent dans les paramètres, sinon utiliser le slug
+const identifier = articleId || (hasSlug ? lastPathElement : null);
+const useSlug = !articleId && hasSlug;
 
 // Éléments DOM
 const loadingState = document.getElementById('loadingState');
@@ -66,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initUserToken();
     
     if (identifier) {
-        if (hasSlug) {
+        if (useSlug) {
             loadArticleBySlug(identifier);
         } else {
             loadArticleById(identifier);
