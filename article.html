@@ -27,7 +27,7 @@
     <meta name="twitter:description" content="Découvrez les dernières innovations en électricité industrielle">
     <meta name="twitter:image" content="https://electroinfo.online/images/logo.png">
     
-    <!-- Styles -->
+    <!-- Styles - CHEMINS ABSOLUS OBLIGATOIRES -->
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="/article-styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -59,10 +59,10 @@
             
             <!-- Actions -->
             <div class="nav-actions">
-                <button id="themeToggle" class="btn-icon" aria-label="Changer le thème">
+                <button id="themeToggle" class="btn-icon" aria-label="Changer le thème" title="Changer le thème">
                     <i class="fas fa-moon"></i>
                 </button>
-                <button id="mobileMenuToggle" class="btn-icon mobile-menu-toggle" aria-label="Menu">
+                <button id="mobileMenuToggle" class="mobile-toggle" aria-label="Menu">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
@@ -70,17 +70,17 @@
     </nav>
 
     <!-- Loading State -->
-    <div id="loadingState" class="loading-container">
-        <div class="loading-content">
-            <i class="fas fa-spinner fa-spin loading-icon"></i>
+    <div id="loadingState" class="loading-state">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
             <p>Chargement de l'article...</p>
         </div>
     </div>
 
     <!-- Error State -->
-    <div id="errorState" class="error-container hidden">
+    <div id="errorState" class="error-state hidden">
         <div class="error-content">
-            <i class="fas fa-exclamation-triangle error-icon"></i>
+            <i class="fas fa-exclamation-triangle"></i>
             <h2>Article introuvable</h2>
             <p>Désolé, cet article n'existe pas ou a été supprimé.</p>
             <a href="/index.html" class="btn btn-primary">
@@ -91,146 +91,160 @@
 
     <!-- Article Container -->
     <main id="articleContainer" class="article-page hidden">
-        <!-- Article Header -->
-        <article class="article-header">
-            <div class="container">
-                <span id="categoryBadge" class="category-badge">INNOVATION</span>
-                <h1 id="articleTitle">Titre de l'article</h1>
-                
-                <div class="article-meta">
-                    <div class="author-info">
-                        <img id="authorAvatar" src="" alt="Avatar" class="author-avatar">
-                        <div>
-                            <strong id="authorName">Auteur</strong>
-                            <div class="meta-details">
-                                <span id="articleDate">Date</span>
-                                <span class="separator">•</span>
-                                <span id="readingTime">5 min de lecture</span>
-                                <span class="separator">•</span>
-                                <i class="fas fa-eye"></i>
-                                <span id="viewsCount">0</span> vues
+        <!-- Article Hero -->
+        <div class="article-hero">
+            <img id="articleImage" src="" alt="" class="article-hero-image">
+            <div class="article-hero-overlay">
+                <div class="article-hero-content">
+                    <span id="categoryBadge" class="article-category-badge category-blue">INNOVATION</span>
+                    <h1 id="articleTitle" class="article-title-hero">Titre de l'article</h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- Article Meta -->
+        <div class="article-meta-section">
+            <div class="article-container">
+                <div class="article-meta-content">
+                    <div class="article-author-info">
+                        <img id="authorAvatar" src="" alt="Avatar" class="author-avatar-large">
+                        <div class="author-details">
+                            <strong id="authorName" class="author-name">Auteur</strong>
+                            <div class="article-stats-section">
+                                <span class="article-stat">
+                                    <i class="fas fa-calendar"></i>
+                                    <span id="articleDate">Date</span>
+                                </span>
+                                <span class="article-stat">
+                                    <i class="fas fa-clock"></i>
+                                    <span id="readingTime">5 min de lecture</span>
+                                </span>
+                                <span class="article-stat">
+                                    <i class="fas fa-eye"></i>
+                                    <span id="viewsCount">0</span> vues
+                                </span>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Share Buttons -->
                     <div class="share-buttons">
-                        <button onclick="copyLink()" class="btn-icon" title="Copier le lien">
+                        <button onclick="copyLink()" class="share-btn" title="Copier le lien">
                             <i class="fas fa-link"></i>
                         </button>
-                        <a href="#" class="btn-icon" title="Partager sur Twitter" target="_blank" id="twitterShare">
+                        <a href="#" class="share-btn" title="Partager sur Twitter" target="_blank" id="twitterShare">
                             <i class="fab fa-twitter"></i>
                         </a>
-                        <a href="#" class="btn-icon" title="Partager sur LinkedIn" target="_blank" id="linkedinShare">
+                        <a href="#" class="share-btn" title="Partager sur LinkedIn" target="_blank" id="linkedinShare">
                             <i class="fab fa-linkedin"></i>
                         </a>
-                        <a href="#" class="btn-icon" title="Partager sur WhatsApp" target="_blank" id="whatsappShare">
+                        <a href="#" class="share-btn" title="Partager sur WhatsApp" target="_blank" id="whatsappShare">
                             <i class="fab fa-whatsapp"></i>
                         </a>
                     </div>
                 </div>
             </div>
-        </article>
-
-        <!-- Article Image -->
-        <div class="article-image-container">
-            <img id="articleImage" src="" alt="" class="article-image">
         </div>
 
         <!-- Article Content -->
-        <div class="article-content-wrapper">
-            <div class="container">
-                <div class="article-grid">
-                    <!-- Main Content -->
-                    <div class="article-main">
-                        <div id="articleContent" class="article-content">
-                            <!-- Le contenu sera injecté ici -->
+        <div class="article-container">
+            <div class="article-content-wrapper">
+                <!-- Main Content Column -->
+                <div class="article-main-content">
+                    <!-- Reactions Bar -->
+                    <div class="article-actions-bar">
+                        <div class="reactions-container">
+                            <button class="reaction-btn" data-reaction="like">
+                                <i class="fas fa-thumbs-up"></i>
+                                <span id="likeCount">0</span>
+                            </button>
+                            <button class="reaction-btn" data-reaction="love">
+                                <i class="fas fa-heart"></i>
+                                <span id="loveCount">0</span>
+                            </button>
+                            <button class="reaction-btn" data-reaction="insight">
+                                <i class="fas fa-lightbulb"></i>
+                                <span id="insightCount">0</span>
+                            </button>
+                            <button class="reaction-btn" data-reaction="support">
+                                <i class="fas fa-hands-helping"></i>
+                                <span id="supportCount">0</span>
+                            </button>
                         </div>
-                        
-                        <!-- Tags -->
-                        <div id="tagsContainer" class="article-tags">
+                    </div>
+
+                    <!-- Article Body -->
+                    <div id="articleContent" class="article-body">
+                        <!-- Le contenu sera injecté ici par JavaScript -->
+                    </div>
+                    
+                    <!-- Tags Section -->
+                    <div class="article-tags-section">
+                        <h3 class="tags-section-title">
+                            <i class="fas fa-tags"></i> Tags
+                        </h3>
+                        <div id="tagsContainer" class="tags-list">
                             <!-- Les tags seront injectés ici -->
-                        </div>
-                        
-                        <!-- Reactions -->
-                        <div class="reactions-section">
-                            <h3>Votre réaction</h3>
-                            <div class="reactions">
-                                <button class="reaction-btn" data-reaction="like">
-                                    <i class="fas fa-thumbs-up"></i>
-                                    <span id="likeCount">0</span>
-                                </button>
-                                <button class="reaction-btn" data-reaction="love">
-                                    <i class="fas fa-heart"></i>
-                                    <span id="loveCount">0</span>
-                                </button>
-                                <button class="reaction-btn" data-reaction="insight">
-                                    <i class="fas fa-lightbulb"></i>
-                                    <span id="insightCount">0</span>
-                                </button>
-                                <button class="reaction-btn" data-reaction="support">
-                                    <i class="fas fa-hands-helping"></i>
-                                    <span id="supportCount">0</span>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Comments Section -->
-                        <div class="comments-section">
-                            <h3>
-                                <i class="fas fa-comments"></i> 
-                                Commentaires (<span id="commentsCount">0</span>)
-                            </h3>
-                            
-                            <!-- Comment Form -->
-                            <form id="commentForm" class="comment-form">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <input type="text" id="commentName" placeholder="Votre nom" required class="input">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="email" id="commentEmail" placeholder="Votre email" required class="input">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <textarea id="commentText" placeholder="Votre commentaire..." required rows="4" class="input"></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-paper-plane"></i> Publier
-                                </button>
-                            </form>
-                            
-                            <!-- Comments List -->
-                            <div id="commentsList">
-                                <!-- Les commentaires seront injectés ici -->
-                            </div>
                         </div>
                     </div>
                     
-                    <!-- Sidebar -->
-                    <aside class="article-sidebar">
-                        <!-- Newsletter Box -->
-                        <div class="sidebar-card newsletter-box">
-                            <i class="fas fa-envelope sidebar-icon"></i>
-                            <h4>Newsletter</h4>
-                            <p>Recevez les derniers articles directement dans votre boîte mail.</p>
-                            <form id="newsletterForm">
-                                <input type="email" id="newsletterEmail" placeholder="votre@email.fr" required class="input">
-                                <button type="submit" class="btn btn-primary btn-block">
-                                    S'abonner
-                                </button>
-                            </form>
-                        </div>
+                    <!-- Comments Section -->
+                    <div class="comments-section">
+                        <h3 class="comments-title">
+                            <i class="fas fa-comments"></i> 
+                            Commentaires (<span id="commentsCount">0</span>)
+                        </h3>
                         
-                        <!-- Related Articles -->
-                        <div class="sidebar-card">
-                            <h4>Articles similaires</h4>
-                            <div id="relatedArticles">
-                                <!-- Les articles connexes seront injectés ici -->
+                        <!-- Comment Form -->
+                        <form id="commentForm" class="comment-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <input type="text" id="commentName" placeholder="Votre nom" required class="input">
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" id="commentEmail" placeholder="Votre email" required class="input">
+                                </div>
                             </div>
+                            <div class="form-group">
+                                <textarea id="commentText" placeholder="Votre commentaire..." required rows="4" class="input"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i> Publier
+                            </button>
+                        </form>
+                        
+                        <!-- Comments List -->
+                        <div id="commentsList" class="comments-list">
+                            <!-- Les commentaires seront injectés ici -->
                         </div>
-                    </aside>
+                    </div>
                 </div>
+                
+                <!-- Sidebar -->
+                <aside class="article-sidebar">
+                    <!-- Newsletter Box -->
+                    <div class="sidebar-card newsletter-card">
+                        <div class="newsletter-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h4 class="sidebar-card-title">Newsletter</h4>
+                        <p class="sidebar-card-text">Recevez les derniers articles directement dans votre boîte mail.</p>
+                        <form id="newsletterForm" class="newsletter-form">
+                            <input type="email" id="newsletterEmail" placeholder="votre@email.fr" required class="input">
+                            <button type="submit" class="btn btn-primary btn-block">
+                                S'abonner
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Related Articles -->
+                    <div class="sidebar-card">
+                        <h4 class="sidebar-card-title">Articles similaires</h4>
+                        <div id="relatedArticles" class="related-articles-list">
+                            <!-- Les articles connexes seront injectés ici -->
+                        </div>
+                    </div>
+                </aside>
             </div>
         </div>
     </main>
@@ -273,7 +287,7 @@
         </div>
     </footer>
 
-    <!-- Newsletter Modal (si besoin) -->
+    <!-- Newsletter Modal -->
     <div id="newsletterModal" class="modal hidden">
         <div class="modal-overlay" onclick="closeNewsletterModal()"></div>
         <div class="modal-content">
@@ -289,7 +303,7 @@
     </div>
 
     <!-- 
-    ⚠️ IMPORTANT : Le script doit être chargé comme MODULE
+    ⚠️ CRITIQUE : Le script DOIT être chargé comme MODULE
     Ceci permet d'utiliser les imports ES6 dans article.js
     -->
     <script type="module" src="/article.js"></script>
