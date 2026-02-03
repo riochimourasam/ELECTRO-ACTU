@@ -245,6 +245,92 @@ async function loadArticleById(id) {
 }
 
 // ============================================
+// CONVERSION DES LIENS VIDÉO EN LECTEURS
+// ============================================
+
+function convertVideoLinks(content) {
+    if (!content) return content;
+    
+    // Créer un élément temporaire pour manipuler le HTML
+    const temp = document.createElement('div');
+    temp.innerHTML = content;
+    
+    // Trouver tous les liens
+    const links = temp.querySelectorAll('a');
+    
+    links.forEach(link => {
+        const url = link.href;
+        let videoEmbed = null;
+        
+        // Détecter YouTube
+        const youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+        const youtubeMatch = url.match(youtubeRegex);
+        
+        if (youtubeMatch) {
+            const videoId = youtubeMatch[1];
+            videoEmbed = `
+                <div class="video-container">
+                    <iframe 
+                        src="https://www.youtube.com/embed/${videoId}" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen
+                        loading="lazy"
+                    ></iframe>
+                </div>
+            `;
+        }
+        
+        // Détecter Vimeo
+        const vimeoRegex = /vimeo\.com\/(?:video\/)?(\d+)/;
+        const vimeoMatch = url.match(vimeoRegex);
+        
+        if (vimeoMatch) {
+            const videoId = vimeoMatch[1];
+            videoEmbed = `
+                <div class="video-container">
+                    <iframe 
+                        src="https://player.vimeo.com/video/${videoId}" 
+                        frameborder="0" 
+                        allow="autoplay; fullscreen; picture-in-picture" 
+                        allowfullscreen
+                        loading="lazy"
+                    ></iframe>
+                </div>
+            `;
+        }
+        
+        // Détecter Dailymotion
+        const dailymotionRegex = /dailymotion\.com\/video\/([a-zA-Z0-9]+)/;
+        const dailymotionMatch = url.match(dailymotionRegex);
+        
+        if (dailymotionMatch) {
+            const videoId = dailymotionMatch[1];
+            videoEmbed = `
+                <div class="video-container">
+                    <iframe 
+                        src="https://www.dailymotion.com/embed/video/${videoId}" 
+                        frameborder="0" 
+                        allow="autoplay; fullscreen; picture-in-picture" 
+                        allowfullscreen
+                        loading="lazy"
+                    ></iframe>
+                </div>
+            `;
+        }
+        
+        // Remplacer le lien par le lecteur vidéo
+        if (videoEmbed) {
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = videoEmbed;
+            link.parentNode.replaceChild(wrapper.firstElementChild, link);
+        }
+    });
+    
+    return temp.innerHTML;
+}
+
+// ============================================
 // AFFICHAGE ARTICLE
 // ============================================
 
@@ -297,8 +383,9 @@ function displayArticle(article) {
         articleImage.parentElement.style.display = 'none';
     }
     
-    // Contenu
-    document.getElementById('articleContent').innerHTML = article.content || '<p>Contenu non disponible</p>';
+    // Contenu avec conversion des liens vidéo
+    const processedContent = convertVideoLinks(article.content || '<p>Contenu non disponible</p>');
+    document.getElementById('articleContent').innerHTML = processedContent;
     
     // Tags
     const tagsContainer = document.getElementById('tagsContainer');
