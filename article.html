@@ -148,103 +148,75 @@
 
         <!-- Article Content -->
         <div class="article-container">
-            <div class="article-content-wrapper">
-                <!-- Main Content Column -->
-                <div class="article-main-content">
-                    <!-- Reactions Bar -->
-                    <div class="article-actions-bar">
-                        <div class="reactions-container">
-                            <button class="reaction-btn" data-reaction="like">
-                                <i class="fas fa-thumbs-up"></i>
-                                <span id="likeCount">0</span>
-                            </button>
-                            <button class="reaction-btn" data-reaction="love">
-                                <i class="fas fa-heart"></i>
-                                <span id="loveCount">0</span>
-                            </button>
-                            <button class="reaction-btn" data-reaction="insight">
-                                <i class="fas fa-lightbulb"></i>
-                                <span id="insightCount">0</span>
-                            </button>
-                            <button class="reaction-btn" data-reaction="support">
-                                <i class="fas fa-hands-helping"></i>
-                                <span id="supportCount">0</span>
-                            </button>
-                        </div>
+            <!-- Main Content Column (Full Width) -->
+            <div class="article-main-content-full">
+                <!-- Reactions Bar -->
+                <div class="article-actions-bar">
+                    <div class="reactions-container">
+                        <button class="reaction-btn" data-reaction="like">
+                            <i class="fas fa-thumbs-up"></i>
+                            <span id="likeCount">0</span>
+                        </button>
+                        <button class="reaction-btn" data-reaction="love">
+                            <i class="fas fa-heart"></i>
+                            <span id="loveCount">0</span>
+                        </button>
+                        <button class="reaction-btn" data-reaction="insight">
+                            <i class="fas fa-lightbulb"></i>
+                            <span id="insightCount">0</span>
+                        </button>
+                        <button class="reaction-btn" data-reaction="support">
+                            <i class="fas fa-hands-helping"></i>
+                            <span id="supportCount">0</span>
+                        </button>
                     </div>
+                </div>
 
-                    <!-- Article Body -->
-                    <div id="articleContent" class="article-body">
-                        <!-- Le contenu sera injecté ici par JavaScript -->
-                    </div>
-                    
-                    <!-- Tags Section -->
-                    <div class="article-tags-section">
-                        <h3 class="tags-section-title">
-                            <i class="fas fa-tags"></i> Tags
-                        </h3>
-                        <div id="tagsContainer" class="tags-list">
-                            <!-- Les tags seront injectés ici -->
-                        </div>
-                    </div>
-                    
-                    <!-- Comments Section -->
-                    <div class="comments-section">
-                        <h3 class="comments-title">
-                            <i class="fas fa-comments"></i> 
-                            Commentaires (<span id="commentsCount">0</span>)
-                        </h3>
-                        
-                        <!-- Comment Form -->
-                        <form id="commentForm" class="comment-form">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <input type="text" id="commentName" placeholder="Votre nom" required class="input">
-                                </div>
-                                <div class="form-group">
-                                    <input type="email" id="commentEmail" placeholder="Votre email" required class="input">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <textarea id="commentText" placeholder="Votre commentaire..." required rows="4" class="input"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-paper-plane"></i> Publier
-                            </button>
-                        </form>
-                        
-                        <!-- Comments List -->
-                        <div id="commentsList" class="comments-list">
-                            <!-- Les commentaires seront injectés ici -->
-                        </div>
+                <!-- Article Body -->
+                <div id="articleContent" class="article-body">
+                    <!-- Le contenu sera injecté ici par JavaScript -->
+                </div>
+                
+                <!-- Tags Section -->
+                <div class="article-tags-section">
+                    <h3 class="tags-section-title">
+                        <i class="fas fa-tags"></i> Tags
+                    </h3>
+                    <div id="tagsContainer" class="tags-list">
+                        <!-- Les tags seront injectés ici -->
                     </div>
                 </div>
                 
-                <!-- Sidebar -->
-                <aside class="article-sidebar">
-                    <!-- Newsletter Box -->
-                    <div class="sidebar-card newsletter-card">
-                        <div class="newsletter-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <h4 class="sidebar-card-title">Newsletter</h4>
-                        <p class="sidebar-card-text">Recevez les derniers articles directement dans votre boîte mail.</p>
-                        <form id="newsletterForm" class="newsletter-form">
-                            <input type="email" id="newsletterEmail" placeholder="votre@email.fr" required class="input">
-                            <button type="submit" class="btn btn-primary btn-block">
-                                S'abonner
-                            </button>
-                        </form>
-                    </div>
+                <!-- Comments Section -->
+                <div class="comments-section">
+                    <h3 class="comments-title">
+                        <i class="fas fa-comments"></i> 
+                        Commentaires (<span id="commentsCount">0</span>)
+                    </h3>
                     
-                    <!-- Related Articles -->
-                    <div class="sidebar-card">
-                        <h4 class="sidebar-card-title">Articles similaires</h4>
-                        <div id="relatedArticles" class="related-articles-list">
-                            <!-- Les articles connexes seront injectés ici -->
+                    <!-- Comment Form -->
+                    <form id="commentForm" class="comment-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" id="commentName" placeholder="Votre nom" required class="input">
+                            </div>
+                            <div class="form-group">
+                                <input type="email" id="commentEmail" placeholder="Votre email" required class="input">
+                            </div>
                         </div>
+                        <div class="form-group">
+                            <textarea id="commentText" placeholder="Votre commentaire..." required rows="4" class="input"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Publier
+                        </button>
+                    </form>
+                    
+                    <!-- Comments List -->
+                    <div id="commentsList" class="comments-list">
+                        <!-- Les commentaires seront injectés ici -->
                     </div>
-                </aside>
+                </div>
             </div>
         </div>
     </main>
@@ -252,6 +224,32 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
+            <!-- Section Newsletter et Articles Similaires -->
+            <div class="footer-widgets">
+                <!-- Newsletter Box -->
+                <div class="footer-widget newsletter-widget">
+                    <div class="newsletter-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h4 class="footer-widget-title">Newsletter</h4>
+                    <p class="footer-widget-text">Recevez les derniers articles directement dans votre boîte mail.</p>
+                    <form id="newsletterForm" class="newsletter-form-footer">
+                        <input type="email" id="newsletterEmail" placeholder="votre@email.fr" required class="input">
+                        <button type="submit" class="btn btn-primary btn-block">
+                            S'abonner
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Related Articles -->
+                <div class="footer-widget related-widget">
+                    <h4 class="footer-widget-title">Articles similaires</h4>
+                    <div id="relatedArticles" class="related-articles-footer">
+                        <!-- Les articles connexes seront injectés ici -->
+                    </div>
+                </div>
+            </div>
+            
             <div class="footer-content">
                 <div class="footer-section">
                     <div class="footer-brand">
