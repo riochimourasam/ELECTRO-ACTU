@@ -545,8 +545,8 @@ window.generateSharePage = async function(articleId) {
     <meta name="twitter:image" content="${imageUrl}">
     
     <!-- Redirection -->
-    <meta http-equiv="refresh" content="0;url=/article.html?id=${articleId}">
-    <script>window.location.href="/article.html?id=${articleId}";</script>
+    <meta http-equiv="refresh" content="0;url=/article/${slug}">
+    <script>window.location.href="/article/${slug}";</script>
     
     <style>
         body{font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#667eea,#764ba2);color:white;text-align:center;padding:2rem}
@@ -597,6 +597,48 @@ ${shareUrl}
     } catch (error) {
         console.error('Erreur:', error);
         showNotification('❌ Erreur lors de la génération', 'error');
+    }
+};
+
+// ============================================
+// MIGRATION DES ANCIENS ARTICLES
+// ============================================
+
+// Migrer les anciens articles qui n'ont pas de slug
+window.migrateOldArticles = async function() {
+    try {
+        const confirmed = confirm('⚠️ Cette opération va ajouter des slugs à tous les articles qui n\'en ont pas encore.\n\nContinuer ?');
+        if (!confirmed) return;
+        
+        showNotification('🔄 Migration en cours...', 'info');
+        
+        const snapshot = await getDocs(collection(db, 'articles'));
+        let migrated = 0;
+        let errors = 0;
+        
+        for (const docSnapshot of snapshot.docs) {
+            const article = docSnapshot.data();
+            
+            // Si l'article n'a pas de slug
+            if (!article.slug) {
+                try {
+                    const slug = await generateUniqueSlug(article.title, docSnapshot.id);
+                    await updateDoc(doc(db, 'articles', docSnapshot.id), { slug });
+                    migrated++;
+                    console.log(`✅ Migré: ${article.title} → ${slug}`);
+                } catch (error) {
+                    console.error(`❌ Erreur migration ${article.title}:`, error);
+                    errors++;
+                }
+            }
+        }
+        
+        showNotification(`✅ Migration terminée ! ${migrated} articles mis à jour${errors > 0 ? `, ${errors} erreurs` : ''}`, 'success');
+        loadArticles(); // Recharger la liste
+        
+    } catch (error) {
+        console.error('Erreur migration:', error);
+        showNotification('❌ Erreur lors de la migration', 'error');
     }
 };
 
