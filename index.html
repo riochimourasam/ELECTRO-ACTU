@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <!-- Encodage et viewport -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Titre et description -->
+    <title>ElectroInfo | Actualité Électrique</title>
+    <meta name="description" content="ElectroInfo : Votre source d'actualités en électricité industrielle. Innovations, sécurité, tutoriels et nouveautés du secteur électrique.">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="48x48" href="/images/logo-small.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/images/logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    <!-- Open Graph (Facebook, LinkedIn) -->
+    <meta property="og:title" content="ElectroInfo | Actualité Électrique">
+    <meta property="og:description" content="Découvrez les dernières avancées technologiques en électricité">
+    <meta property="og:image" content="https://electroinfo.online/images/logo.png">
+    <meta property="og:url" content="https://electroinfo.online">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ElectroInfo | Actualité Électrique">
+    <meta name="twitter:description" content="Découvrez les dernières avancées technologiques en électricité">
+    <meta name="twitter:image" content="https://electroinfo.online/images/logo.png">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+               <img src="images/logo-small.png" alt="Logo ElectroInfo" class="nav-logo">
+             <span>ELECTROINFO</span>
+            </div>
+            
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="nav-menu" id="navMenu">
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link active">Accueil</a>
+                    <a href="#innovations" class="nav-link">Innovations</a>
+                    <a href="#securite" class="nav-link">Sécurité</a>
+                    <a href="#nouveautes" class="nav-link">Nouveautés</a>
+                    <a href="archives.html" class="nav-link">Archives</a>
+                    <a href="about.html" class="nav-link">À propos</a>
+                    <a href="mentions-legales.html" class="nav-link">Mentions légales</a>
+                </div>
+                
+                <div class="nav-actions">
+                    <button id="newsletterBtn" class="btn btn-outline">
+                        <i class="fas fa-envelope"></i>
+                        <span class="btn-text">Newsletter</span>
+                    </button>
+                    
+                    <!-- Non connecté -->
+                    <a href="auth.html" id="loginBtn" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span class="btn-text">Connexion</span>
+                    </a>
+                    
+                    <!-- Connecté -->
+                    <div id="userMenu" class="user-menu hidden">
+                        <button class="user-btn" id="userMenuToggle">
+                            <img id="userAvatar" src="" alt="Avatar" class="avatar">
+                            <span id="userName" class="user-name"></span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown hidden" id="userDropdown">
+                            <div class="dropdown-header">
+                                <img id="userAvatarDropdown" src="" alt="Avatar" class="avatar-large">
+                                <div>
+                                    <div class="dropdown-name" id="userNameDropdown"></div>
+                                    <div class="dropdown-email" id="userEmailDropdown"></div>
+                                </div>
+                            </div>
+                            <hr>
+                            <a href="#profile" class="dropdown-item">
+                                <i class="fas fa-user"></i> Mon Profil
+                            </a>
+                            <a href="#favorites" class="dropdown-item">
+                                <i class="fas fa-bookmark"></i> Favoris
+                            </a>
+                            <hr id="adminDivider" class="hidden">
+                            <a href="admin.html" id="adminLink" class="dropdown-item hidden">
+                                <i class="fas fa-cog"></i> Administration
+                            </a>
+                            <hr>
+                            <button id="logoutBtn" class="dropdown-item logout">
+                                <i class="fas fa-sign-out-alt"></i> Déconnexion
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container">
+            <h1 class="hero-title">Le Courant de l'Information</h1>
+            <p class="hero-subtitle">Découvrez les dernières avancées technologiques en électricité</p>
+            
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Rechercher un article...">
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="content-grid">
+                <!-- Articles Section -->
+                <section class="articles-section">
+                    <div class="filters">
+                        <button class="filter-btn active" data-category="all">Tous</button>
+                        <button class="filter-btn" data-category="INNOVATION">Innovation</button>
+                        <button class="filter-btn" data-category="SÉCURITÉ">Sécurité</button>
+                        <button class="filter-btn" data-category="NOUVEAUTÉ">Nouveauté</button>
+                        <button class="filter-btn" data-category="TUTO">Tuto</button>
+                        <button class="filter-btn" data-category="DOMOTIQUE">Domotique</button>
+                    </div>
+
+                    <div class="sort-bar">
+                        <label>Trier par :</label>
+                        <select id="sortSelect">
+                            <option value="date-desc">Plus récent</option>
+                            <option value="date-asc">Plus ancien</option>
+                            <option value="popular">Plus populaire</option>
+                            <option value="title">Titre (A-Z)</option>
+                        </select>
+                    </div>
+
+                    <!-- Articles Grid - Maintenant visible dès le chargement -->
+                    <div id="articlesGrid" class="articles-grid">
+                        <!-- Articles de démonstration - seront remplacés par Firebase si disponible -->
+                        <article class="article-card demo-article">
+                            <img src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800" alt="Batteries solides nouvelle génération" class="article-image" loading="lazy">
+                            <div class="article-content">
+                                <div class="article-meta">
+                                    <span class="badge badge-blue">INNOVATION</span>
+                                    <span class="article-date">8 février 2025</span>
+                                </div>
+                                <h3 class="article-title">Les batteries solides : révolution énergétique en marche</h3>
+                                <p class="article-summary">Les nouvelles batteries à électrolyte solide promettent une densité énergétique deux fois supérieure aux batteries lithium-ion actuelles, avec une sécurité accrue.</p>
+                                <div class="article-author">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span>Par Latour</span>
+                                </div>
+                                <div class="article-footer">
+                                    <div class="article-stats">
+                                        <span><i class="fas fa-eye"></i> 1,245</span>
+                                        <span><i class="fas fa-comment"></i> 12</span>
+                                    </div>
+                                    <button class="btn-read-more" onclick="alert('Article de démonstration - Connectez votre Firebase pour voir les vrais articles')">
+                                        Lire la suite <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="article-card demo-article">
+                            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800" alt="Sécurité électrique industrielle" class="article-image" loading="lazy">
+                            <div class="article-content">
+                                <div class="article-meta">
+                                    <span class="badge badge-red">SÉCURITÉ</span>
+                                    <span class="article-date">7 février 2025</span>
+                                </div>
+                                <h3 class="article-title">Nouvelles normes de sécurité NF C 15-100 : ce qui change en 2025</h3>
+                                <p class="article-summary">Mise à jour majeure de la norme électrique française avec de nouvelles exigences pour les installations domestiques et tertiaires.</p>
+                                <div class="article-author">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span>Par Latour</span>
+                                </div>
+                                <div class="article-footer">
+                                    <div class="article-stats">
+                                        <span><i class="fas fa-eye"></i> 892</span>
+                                        <span><i class="fas fa-comment"></i> 8</span>
+                                    </div>
+                                    <button class="btn-read-more" onclick="alert('Article de démonstration - Connectez votre Firebase pour voir les vrais articles')">
+                                        Lire la suite <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="article-card demo-article">
+                            <img src="https://images.unsplash.com/photo-1558002038-1055907df827?w=800" alt="Panneaux solaires nouvelle génération" class="article-image" loading="lazy">
+                            <div class="article-content">
+                                <div class="article-meta">
+                                    <span class="badge badge-green">NOUVEAUTÉ</span>
+                                    <span class="article-date">6 février 2025</span>
+                                </div>
+                                <h3 class="article-title">Panneaux solaires à pérovskite : rendement record de 33%</h3>
+                                <p class="article-summary">Une équipe de chercheurs atteint un rendement de conversion record avec des cellules solaires à pérovskite, ouvrant la voie à une production massive.</p>
+                                <div class="article-author">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span>Par Latour</span>
+                                </div>
+                                <div class="article-footer">
+                                    <div class="article-stats">
+                                        <span><i class="fas fa-eye"></i> 2,103</span>
+                                        <span><i class="fas fa-comment"></i> 24</span>
+                                    </div>
+                                    <button class="btn-read-more" onclick="alert('Article de démonstration - Connectez votre Firebase pour voir les vrais articles')">
+                                        Lire la suite <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="article-card demo-article">
+                            <img src="https://images.unsplash.com/photo-1558618047-35a06e0a0a06?w=800" alt="Domotique et économie d'énergie" class="article-image" loading="lazy">
+                            <div class="article-content">
+                                <div class="article-meta">
+                                    <span class="badge badge-purple">DOMOTIQUE</span>
+                                    <span class="article-date">5 février 2025</span>
+                                </div>
+                                <h3 class="article-title">Optimiser sa consommation électrique avec la domotique</h3>
+                                <p class="article-summary">Guide pratique pour réduire sa facture d'électricité de 30% grâce aux systèmes domotiques intelligents et aux automatisations.</p>
+                                <div class="article-author">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span>Par Latour</span>
+                                </div>
+                                <div class="article-footer">
+                                    <div class="article-stats">
+                                        <span><i class="fas fa-eye"></i> 1,567</span>
+                                        <span><i class="fas fa-comment"></i> 19</span>
+                                    </div>
+                                    <button class="btn-read-more" onclick="alert('Article de démonstration - Connectez votre Firebase pour voir les vrais articles')">
+                                        Lire la suite <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="article-card demo-article">
+                            <img src="https://images.unsplash.com/photo-1581092162384-8987c1d64926?w=800" alt="Installation tableau électrique" class="article-image" loading="lazy">
+                            <div class="article-content">
+                                <div class="article-meta">
+                                    <span class="badge badge-orange">TUTO</span>
+                                    <span class="article-date">4 février 2025</span>
+                                </div>
+                                <h3 class="article-title">Comment câbler un tableau électrique divisionnaire</h3>
+                                <p class="article-summary">Tutoriel détaillé avec schémas pour installer en toute sécurité un tableau divisionnaire dans votre garage ou dépendance.</p>
+                                <div class="article-author">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span>Par Latour</span>
+                                </div>
+                                <div class="article-footer">
+                                    <div class="article-stats">
+                                        <span><i class="fas fa-eye"></i> 3,421</span>
+                                        <span><i class="fas fa-comment"></i> 31</span>
+                                    </div>
+                                    <button class="btn-read-more" onclick="alert('Article de démonstration - Connectez votre Firebase pour voir les vrais articles')">
+                                        Lire la suite <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="article-card demo-article">
+                            <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800" alt="Compteur intelligent Linky" class="article-image" loading="lazy">
+                            <div class="article-content">
+                                <div class="article-meta">
+                                    <span class="badge badge-blue">INNOVATION</span>
+                                    <span class="article-date">3 février 2025</span>
+                                </div>
+                                <h3 class="article-title">Compteurs intelligents : nouvelles fonctionnalités en 2025</h3>
+                                <p class="article-summary">Découvrez les nouvelles capacités des compteurs Linky et comment en tirer parti pour optimiser votre consommation électrique.</p>
+                                <div class="article-author">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span>Par Latour</span>
+                                </div>
+                                <div class="article-footer">
+                                    <div class="article-stats">
+                                        <span><i class="fas fa-eye"></i> 987</span>
+                                        <span><i class="fas fa-comment"></i> 15</span>
+                                    </div>
+                                    <button class="btn-read-more" onclick="alert('Article de démonstration - Connectez votre Firebase pour voir les vrais articles')">
+                                        Lire la suite <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div id="pagination" class="pagination hidden"></div>
+                </section>
+
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <div class="widget">
+                        <h3>Articles Populaires</h3>
+                        <div id="popularArticles">
+                            <div class="popular-item">
+                                <span class="popular-rank">1</span>
+                                <div class="popular-content">
+                                    <h4 class="popular-title">Les batteries solides : révolution énergétique</h4>
+                                    <p class="popular-views"><i class="fas fa-eye"></i> 3,421 vues</p>
+                                </div>
+                            </div>
+                            <div class="popular-item">
+                                <span class="popular-rank">2</span>
+                                <div class="popular-content">
+                                    <h4 class="popular-title">Normes NF C 15-100 : ce qui change</h4>
+                                    <p class="popular-views"><i class="fas fa-eye"></i> 2,103 vues</p>
+                                </div>
+                            </div>
+                            <div class="popular-item">
+                                <span class="popular-rank">3</span>
+                                <div class="popular-content">
+                                    <h4 class="popular-title">Panneaux solaires à pérovskite</h4>
+                                    <p class="popular-views"><i class="fas fa-eye"></i> 1,892 vues</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="widget widget-newsletter">
+                        <i class="fas fa-envelope-open-text widget-icon"></i>
+                        <h3>Newsletter</h3>
+                        <p>Restez informé des dernières actualités électriques</p>
+                        <button class="btn btn-block btn-primary" onclick="openNewsletterModal()">
+                            S'abonner
+                        </button>
+                    </div>
+
+                    <div class="widget">
+                        <h3>À Propos</h3>
+                        <p class="widget-text">ElectroInfo est votre source d'expertise en électricité industrielle. Nous parlons volt, ampère et watt sans concession.</p>
+                        <p class="widget-text"><strong>Par Latour</strong> - Expert en électricité industrielle</p>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <!-- Newsletter Modal -->
+    <div id="newsletterModal" class="modal hidden">
+        <div class="modal-overlay" onclick="closeNewsletterModal()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeNewsletterModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-body">
+                <i class="fas fa-envelope modal-icon"></i>
+                <h2>Abonnez-vous à notre Newsletter</h2>
+                <p>Recevez les dernières actualités directement dans votre boîte mail.</p>
+                <form id="newsletterForm">
+                    <input type="email" id="newsletterEmail" required placeholder="votre@email.fr" class="input">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-check"></i> S'abonner
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4>ElectroInfo</h4>
+                    <p>Votre source d'expertise en électricité industrielle depuis 2024.</p>
+                    <p><strong>Par Latour</strong></p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Navigation</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="archives.html">Archives</a></li>
+                        <li><a href="about.html">À propos</a></li>
+                        <li><a href="mentions-legales.html">Mentions légales</a></li>
+                        <li><a href="mentions-legales.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Légal</h4>
+                    <ul class="footer-links">
+                        <li><a href="mentions-legales.html#mentions">Mentions légales</a></li>
+                        <li><a href="mentions-legales.html#confidentialite">Confidentialité</a></li>
+                        <li><a href="mentions-legales.html#cookies">Cookies</a></li>
+                        <li><a href="mentions-legales.html#cgu">CGU</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Suivez-nous</h4>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 ElectroInfo par Latour. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase v9 Modular -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>

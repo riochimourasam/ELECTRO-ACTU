@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentions Légales & Contact | Électro-Actu</title>
+    <meta name="description" content="Mentions légales, politique de confidentialité et contact d'Électro-Actu">
+
+    <!-- Favicon -->
+    <link rel="icon" href="/images/favicon.ico">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="mentions-legales-styles.css">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <img src="images/logo-small.png" alt="Logo Électro-Actu" class="nav-logo">
+                <span>ÉLECTRO-ACTU</span>
+            </div>
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links" id="navMenu">
+                <a href="index.html">Accueil</a>
+                <a href="archives.html">Archives</a>
+                <a href="about.html">À propos</a>
+                <a href="mentions-legales.html" class="active">Mentions légales</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="legal-hero">
+        <div class="container">
+            <h1><i class="fas fa-gavel"></i> Mentions Légales & Contact</h1>
+            <p>Informations légales, politique de confidentialité et contact</p>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="container">
+        <!-- Sommaire -->
+        <nav class="legal-nav">
+            <a href="#mentions">Mentions légales</a>
+            <a href="#contact">Contact</a>
+            <a href="#confidentialite">Confidentialité</a>
+            <a href="#cookies">Cookies</a>
+            <a href="#cgu">CGU</a>
+        </nav>
+
+        <!-- Mentions légales -->
+        <section id="mentions" class="legal-section">
+            <h2><i class="fas fa-info-circle"></i> Mentions légales</h2>
+            <p><strong>Éditeur :</strong> Électro-Actu</p>
+            <p><strong>Responsable :</strong> Latour</p>
+            <p><strong>Email :</strong> <a href="mailto:contact@electroinfo.online">contact@electroinfo.online</a></p>
+            <p><strong>Hébergeur :</strong> Firebase Hosting, Google LLC, Mountain View, CA, USA</p>
+            <p><strong>Propriété intellectuelle :</strong> Tout le contenu est protégé, reproduction interdite sans autorisation.</p>
+        </section>
+
+        <!-- Contact -->
+        <section id="contact" class="legal-section">
+            <h2><i class="fas fa-envelope"></i> Contact</h2>
+            <p>Pour :</p>
+            <ul>
+                <li>Questions générales : <a href="mailto:contact@electroinfo.online">contact@electroinfo.online</a></li>
+                <li>Proposer un article : <a href="mailto:redaction@electroinfo.online">redaction@electroinfo.online</a></li>
+                <li>Signaler un problème : <a href="mailto:support@electroinfo.online">support@electroinfo.online</a></li>
+                <li>Partenariats : <a href="mailto:partenariats@electroinfo.online">partenariats@electroinfo.online</a></li>
+            </ul>
+
+            <!-- Formulaire simple -->
+            <form action="mailto:contact@electroinfo.online" method="post" enctype="text/plain" class="contact-form">
+                <label for="name">Nom :</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email :</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="message">Message :</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+
+                <button type="submit"><i class="fas fa-paper-plane"></i> Envoyer</button>
+            </form>
+        </section>
+
+        <!-- Confidentialité -->
+        <section id="confidentialite" class="legal-section">
+            <h2><i class="fas fa-shield-alt"></i> Politique de confidentialité</h2>
+            <p>Vos données sont protégées et utilisées uniquement pour gérer votre compte ou envoyer la newsletter.</p>
+            <p>Vous disposez de tous vos droits RGPD : accès, rectification, suppression, opposition, portabilité.</p>
+        </section>
+
+        <!-- Cookies -->
+        <section id="cookies" class="legal-section">
+            <h2><i class="fas fa-cookie-bite"></i> Cookies</h2>
+            <p>Les cookies essentiels sont nécessaires au fonctionnement du site. Vous pouvez gérer vos cookies via les paramètres de votre navigateur.</p>
+        </section>
+
+        <!-- CGU -->
+        <section id="cgu" class="legal-section">
+            <h2><i class="fas fa-file-contract"></i> Conditions Générales d’Utilisation</h2>
+            <p>En utilisant Électro-Actu, vous acceptez les CGU. Respectez les règles et la sécurité du site.</p>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Électro-Actu par Latour. Tous droits réservés.</p>
+            <p><a href="index.html">Accueil</a> | <a href="archives.html">Archives</a> | <a href="about.html">À propos</a> | <a href="mentions-legales.html">Mentions légales</a></p>
+        </div>
+    </footer>
+
+    <!-- JS menu mobile -->
+    <script>
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        mobileToggle?.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            const icon = mobileToggle.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+    </script>
+</body>
+</html>
