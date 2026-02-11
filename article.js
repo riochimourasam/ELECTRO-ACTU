@@ -653,12 +653,12 @@ function processImages(container) {
 // ============================================
 
 function processPinterestEmbeds(container) {
-    // Chercher les divs avec la classe pinterest-embed
-    const pinterestDivs = container.querySelectorAll('.pinterest-embed, [data-pin-do]');
+    // Chercher les divs avec la classe pinterest-embed ou pinterest-iframe-wrapper
+    const pinterestDivs = container.querySelectorAll('.pinterest-embed, .pinterest-iframe-wrapper, [data-pin-do]');
     
     pinterestDivs.forEach(div => {
-        // S'assurer que le script Pinterest est chargé
-        if (!document.querySelector('script[src*="pinit.js"]')) {
+        // S'assurer que le script Pinterest est chargé pour les embeds data-pin-do
+        if (div.querySelector('[data-pin-do]') && !document.querySelector('script[src*="pinit.js"]')) {
             const script = document.createElement('script');
             script.async = true;
             script.defer = true;
@@ -670,6 +670,29 @@ function processPinterestEmbeds(container) {
         if (!div.style.margin) {
             div.style.margin = '2rem 0';
             div.style.textAlign = 'center';
+        }
+    });
+    
+    // Traiter les iframes Pinterest directement
+    const pinterestIframes = container.querySelectorAll('iframe[src*="pinterest.com"]');
+    pinterestIframes.forEach(iframe => {
+        // S'assurer que l'iframe a des styles appropriés
+        if (!iframe.style.maxWidth) {
+            iframe.style.maxWidth = '100%';
+        }
+        
+        // Encapsuler dans un wrapper si pas déjà fait
+        if (!iframe.parentElement.classList.contains('pinterest-iframe-wrapper')) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'pinterest-iframe-wrapper';
+            wrapper.style.cssText = `
+                margin: 2rem 0;
+                text-align: center;
+                max-width: 100%;
+            `;
+            
+            iframe.parentNode.insertBefore(wrapper, iframe);
+            wrapper.appendChild(iframe);
         }
     });
     

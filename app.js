@@ -1,4 +1,4 @@
-// app.js - Script principal pour index.html AMÉLIORÉ
+// app.js - Script principal pour Electroinfo.online AVEC SLUGS
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getFirestore, collection, getDocs, query, orderBy, limit, where, addDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
@@ -24,9 +24,8 @@ let filteredArticles = [];
 let currentPage = 1;
 const articlesPerPage = 6;
 let currentUser = null;
-let firebaseLoaded = false;
 
-// Détection environnement local/production
+// 🆕 AJOUT : Détection environnement local/production
 const isLocalDev = window.location.hostname === 'localhost' || 
                    window.location.hostname === '127.0.0.1' ||
                    window.location.port === '5500';
@@ -117,44 +116,26 @@ document.getElementById('logoutBtn')?.addEventListener('click', async () => {
 // ============================================
 async function loadArticles() {
     try {
-        // Tenter de charger depuis Firebase
+        articlesGrid.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i><p>Chargement...</p></div>';
+
         const q = query(collection(db, 'articles'), orderBy('createdAt', 'desc'));
         const snapshot = await getDocs(q);
 
-        if (snapshot.empty) {
-            // Pas d'articles dans Firebase - garder les articles de démo
-            console.log('📝 Aucun article Firebase - affichage des articles de démonstration');
-            firebaseLoaded = false;
-            // Les articles de démo sont déjà dans le HTML, pas besoin de faire quoi que ce soit
-            return;
-        }
-
-        // Articles trouvés dans Firebase - les afficher
         allArticles = [];
         snapshot.forEach(doc => {
             allArticles.push({ id: doc.id, ...doc.data() });
         });
 
         filteredArticles = [...allArticles];
-        firebaseLoaded = true;
         displayArticles();
         displayPopularArticles();
-        
-        console.log(`✅ ${allArticles.length} articles chargés depuis Firebase`);
     } catch (error) {
-        console.error('❌ Erreur chargement articles Firebase:', error);
-        console.log('📝 Affichage des articles de démonstration');
-        firebaseLoaded = false;
-        // Garder les articles de démo du HTML
+        console.error('Erreur chargement articles:', error);
+        articlesGrid.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Erreur de chargement</p></div>';
     }
 }
 
 function displayArticles() {
-    if (!firebaseLoaded) {
-        // Ne rien faire - les articles de démo sont déjà dans le HTML
-        return;
-    }
-
     const start = (currentPage - 1) * articlesPerPage;
     const end = start + articlesPerPage;
     const articlesToShow = filteredArticles.slice(start, end);
@@ -178,13 +159,10 @@ function createArticleCard(article) {
     const imgUrl = article.imageUrl || 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800';
     const categoryClass = getCategoryClass(article.category);
 
-    // URLs adaptées selon l'environnement
+    // 🔧 MODIFIÉ : URLs adaptées selon l'environnement
     const articleUrl = isLocalDev 
         ? `article.html?id=${article.id}`
         : (article.slug ? `article/${article.slug}` : `article.html?id=${article.id}`);
-
-    // Déterminer l'auteur - toujours "Par Latour" sauf si spécifié autrement
-    const authorName = article.authorName || 'Latour';
 
     return `
         <article class="article-card" onclick="window.location.href='${articleUrl}'">
@@ -196,13 +174,9 @@ function createArticleCard(article) {
                 </div>
                 <h3 class="article-title">${escapeHtml(article.title)}</h3>
                 <p class="article-summary">${escapeHtml(article.summary || '')}</p>
-                <div class="article-author">
-                    <i class="fas fa-user-circle"></i>
-                    <span>Par ${escapeHtml(authorName)}</span>
-                </div>
                 <div class="article-footer">
                     <div class="article-stats">
-                        <span><i class="fas fa-eye"></i> ${formatNumber(article.views || 0)}</span>
+                        <span><i class="fas fa-eye"></i> ${article.views || 0}</span>
                         <span><i class="fas fa-comment"></i> ${article.commentsCount || 0}</span>
                     </div>
                     <button class="btn-read-more">
@@ -240,14 +214,14 @@ function displayPagination() {
     for (let i = 1; i <= totalPages; i++) {
         if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
             const pageBtn = document.createElement('button');
-            pageBtn.className = 'pagination-btn' + (i === currentPage ? ' active' : '');
+            pageBtn.className = `pagination-btn ${i === currentPage ? 'active' : ''}`;
             pageBtn.textContent = i;
             pageBtn.onclick = () => changePage(i);
             pagination.appendChild(pageBtn);
         } else if (i === currentPage - 2 || i === currentPage + 2) {
             const dots = document.createElement('span');
-            dots.className = 'pagination-dots';
             dots.textContent = '...';
+            dots.className = 'pagination-dots';
             pagination.appendChild(dots);
         }
     }
@@ -262,6 +236,8 @@ function displayPagination() {
 }
 
 function changePage(page) {
+    const totalPages = Math.ceil(filteredArticles.length / articlesPerPage);
+    if (page < 1 || page > totalPages) return;
     currentPage = page;
     displayArticles();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -272,20 +248,17 @@ function changePage(page) {
 // ============================================
 async function displayPopularArticles() {
     try {
-        if (!firebaseLoaded || allArticles.length === 0) {
-            // Les articles populaires de démo sont déjà dans le HTML
-            return;
-        }
-
         const popular = [...allArticles]
             .sort((a, b) => (b.views || 0) - (a.views || 0))
             .slice(0, 5);
 
         if (popular.length === 0) {
+            popularArticles.innerHTML = '<p class="empty-text">Aucun article</p>';
             return;
         }
 
         popularArticles.innerHTML = popular.map((article, index) => {
+            // 🔧 MODIFIÉ : URLs adaptées selon l'environnement
             const articleUrl = isLocalDev 
                 ? `article.html?id=${article.id}`
                 : (article.slug ? `article/${article.slug}` : `article.html?id=${article.id}`);
@@ -295,7 +268,7 @@ async function displayPopularArticles() {
                     <span class="popular-rank">${index + 1}</span>
                     <div class="popular-content">
                         <h4 class="popular-title">${escapeHtml(article.title)}</h4>
-                        <p class="popular-views"><i class="fas fa-eye"></i> ${formatNumber(article.views || 0)} vues</p>
+                        <p class="popular-views"><i class="fas fa-eye"></i> ${article.views || 0} vues</p>
                     </div>
                 </div>
             `;
@@ -309,8 +282,6 @@ async function displayPopularArticles() {
 // RECHERCHE & FILTRES
 // ============================================
 searchInput?.addEventListener('input', (e) => {
-    if (!firebaseLoaded) return; // Ne pas filtrer les articles de démo
-
     const query = e.target.value.toLowerCase().trim();
 
     if (!query) {
@@ -329,8 +300,6 @@ searchInput?.addEventListener('input', (e) => {
 
 filterBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
-        if (!firebaseLoaded) return; // Ne pas filtrer les articles de démo
-
         filterBtns.forEach(b => b.classList.remove('active'));
         e.target.classList.add('active');
 
@@ -348,8 +317,6 @@ filterBtns.forEach(btn => {
 });
 
 sortSelect?.addEventListener('change', (e) => {
-    if (!firebaseLoaded) return; // Ne pas trier les articles de démo
-
     const sortType = e.target.value;
 
     switch (sortType) {
@@ -438,13 +405,6 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-function formatNumber(num) {
-    if (num >= 1000) {
-        return (num / 1000).toFixed(1).replace('.0', '') + 'k';
-    }
-    return num.toString();
-}
-
 function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
@@ -471,6 +431,7 @@ const navMenu = document.getElementById('navMenu');
 
 mobileToggle?.addEventListener('click', () => {
     navMenu.classList.toggle('active');
+    // Changer l'icône du menu
     const icon = mobileToggle.querySelector('i');
     if (navMenu.classList.contains('active')) {
         icon.classList.remove('fa-bars');
@@ -488,7 +449,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
         const icon = mobileToggle.querySelector('i');
         icon.classList.remove('fa-times');
         icon.classList.add('fa-bars');
-    }); 
+    });
 });
 
 // Fermer le menu mobile quand on clique en dehors
@@ -503,12 +464,8 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Message de debug
+// 🆕 AJOUT : Message de debug
 console.log('🔧 Mode:', isLocalDev ? 'DÉVELOPPEMENT LOCAL (utilise ?id=xxx)' : 'PRODUCTION (utilise /article/slug)');
-console.log('📝 Articles de démonstration visibles immédiatement');
-console.log('🔄 Tentative de chargement Firebase...');
 
 // Initialisation
-document.addEventListener('DOMContentLoaded', () => {
-    loadArticles();
-});
+document.addEventListener('DOMContentLoaded', loadArticles);

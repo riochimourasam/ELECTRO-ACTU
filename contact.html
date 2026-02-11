@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Electroinfo</title>
+    <meta name="description" content="Contactez l'équipe d'Electroinfo. Posez vos questions, partagez vos suggestions ou signalez un problème.">
+    
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand" onclick="window.location.href='index.html'">
+                <img src="images/logo-small.png" alt="Logo Electroinfo" class="nav-logo">
+                <span>ELECTROINFO</span>
+            </div>
+            
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="nav-menu" id="navMenu">
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Accueil</a>
+                    <a href="#innovations" class="nav-link">Innovations</a>
+                    <a href="#securite" class="nav-link">Sécurité</a>
+                    <a href="#nouveautes" class="nav-link">Nouveautés</a>
+                    <a href="about.html" class="nav-link">À propos</a>
+                    <a href="contact.html" class="nav-link active">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="container">
+            <h1 class="page-title">
+                <i class="fas fa-envelope"></i>
+                Contactez-Nous
+            </h1>
+            <p class="page-subtitle">Nous sommes à votre écoute</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="page-content">
+        <div class="container">
+            <div class="contact-grid">
+                <!-- Contact Form -->
+                <div class="contact-form-section">
+                    <div class="content-box">
+                        <h2 class="section-heading">
+                            <i class="fas fa-paper-plane"></i>
+                            Envoyez-nous un Message
+                        </h2>
+                        <p style="margin-bottom: 2rem; color: var(--gray-600);">
+                            Vous avez une question, une suggestion ou souhaitez signaler un problème ? 
+                            Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais.
+                        </p>
+                        
+                        <form id="contactForm" class="contact-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="name">
+                                        <i class="fas fa-user"></i>
+                                        Nom complet *
+                                    </label>
+                                    <input type="text" id="name" name="name" class="input" required placeholder="Votre nom">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="email">
+                                        <i class="fas fa-envelope"></i>
+                                        Email *
+                                    </label>
+                                    <input type="email" id="email" name="email" class="input" required placeholder="votre@email.fr">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="subject">
+                                    <i class="fas fa-tag"></i>
+                                    Sujet *
+                                </label>
+                                <select id="subject" name="subject" class="input" required>
+                                    <option value="">Sélectionnez un sujet...</option>
+                                    <option value="question">Question technique</option>
+                                    <option value="suggestion">Suggestion d'article</option>
+                                    <option value="error">Signaler une erreur</option>
+                                    <option value="partnership">Partenariat</option>
+                                    <option value="other">Autre</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="message">
+                                    <i class="fas fa-comment"></i>
+                                    Message *
+                                </label>
+                                <textarea id="message" name="message" class="input" rows="8" required placeholder="Écrivez votre message ici..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="checkbox">
+                                    <input type="checkbox" required>
+                                    <span>J'accepte que mes données soient utilisées pour répondre à ma demande (conformément à notre <a href="privacy.html" class="link">politique de confidentialité</a>)</span>
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-block btn-lg">
+                                <i class="fas fa-paper-plane"></i>
+                                Envoyer le Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Contact Info -->
+                <aside class="contact-info-section">
+                    <div class="content-box info-box">
+                        <h3 class="section-heading">
+                            <i class="fas fa-info-circle"></i>
+                            Informations de Contact
+                        </h3>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h4>Email</h4>
+                                <p><a href="mailto:contact@electroinfo.online">contact@electroinfo.online</a></p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div>
+                                <h4>Temps de Réponse</h4>
+                                <p>Sous 24-48h ouvrées</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fab fa-discord"></i>
+                            </div>
+                            <div>
+                                <h4>Communauté</h4>
+                                <p>Rejoignez notre serveur Discord</p>
+                                <a href="#" class="btn btn-outline btn-sm" style="margin-top: 0.5rem;">
+                                    <i class="fab fa-discord"></i>
+                                    Rejoindre
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="content-box info-box">
+                        <h3 class="section-heading">
+                            <i class="fas fa-question-circle"></i>
+                            Questions Fréquentes
+                        </h3>
+                        
+                        <div class="faq-item">
+                            <h4>Comment proposer un article ?</h4>
+                            <p>Contactez-nous via le formulaire en choisissant "Suggestion d'article" comme sujet.</p>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <h4>Puis-je utiliser vos contenus ?</h4>
+                            <p>Consultez nos <a href="terms.html" class="link">conditions d'utilisation</a> pour connaître les règles de partage.</p>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <h4>Comment signaler une erreur ?</h4>
+                            <p>Utilisez le formulaire avec le sujet "Signaler une erreur" en précisant l'article concerné.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="content-box social-box">
+                        <h3 class="section-heading">
+                            <i class="fas fa-share-alt"></i>
+                            Suivez-Nous
+                        </h3>
+                        <p style="margin-bottom: 1.5rem; color: var(--gray-600);">
+                            Restez informé de nos dernières publications
+                        </p>
+                        <div class="social-links-grid">
+                            <a href="#" class="social-link-card">
+                                <i class="fab fa-facebook"></i>
+                                <span>Facebook</span>
+                            </a>
+                            <a href="#" class="social-link-card">
+                                <i class="fab fa-twitter"></i>
+                                <span>Twitter</span>
+                            </a>
+                            <a href="#" class="social-link-card">
+                                <i class="fab fa-linkedin"></i>
+                                <span>LinkedIn</span>
+                            </a>
+                            <a href="#" class="social-link-card">
+                                <i class="fab fa-youtube"></i>
+                                <span>YouTube</span>
+                            </a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">
+                        <i class="fas fa-bolt"></i>
+                        Electroinfo
+                    </h3>
+                    <p class="footer-description">
+                        Votre portail d'expertise en électricité et électronique. 
+                        Nous parlons volt, ampère et watt sans concession.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Navigation</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="about.html">À propos</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="#innovations">Innovations</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Ressources</h4>
+                    <ul class="footer-links">
+                        <li><a href="#securite">Sécurité</a></li>
+                        <li><a href="#nouveautes">Nouveautés</a></li>
+                        <li><a href="index.html#newsletter">Newsletter</a></li>
+                        <li><a href="admin.html">Administration</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 class="footer-subtitle">Informations Légales</h4>
+                    <ul class="footer-links">
+                        <li><a href="privacy.html">Politique de confidentialité</a></li>
+                        <li><a href="terms.html">Conditions d'utilisation</a></li>
+                        <li><a href="legal.html">Mentions légales</a></li>
+                        <li><a href="cookies.html">Gestion des cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Electroinfo. Tous droits réservés.</p>
+                <p class="footer-credit">
+                    Développé avec <i class="fas fa-heart" style="color: #dc2626;"></i> pour la communauté électrique
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        // Mobile menu toggle
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        mobileToggle?.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            const icon = mobileToggle.querySelector('i');
+            if (navMenu.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Contact form submission
+        const contactForm = document.getElementById('contactForm');
+        contactForm?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData);
+            
+            // Simulated submission (replace with actual Firebase/backend logic)
+            console.log('Form submitted:', data);
+            
+            // Show success message
+            alert('Merci pour votre message ! Nous vous répondrons dans les plus brefs délais.');
+            contactForm.reset();
+        });
+    </script>
+</body>
+</html>
