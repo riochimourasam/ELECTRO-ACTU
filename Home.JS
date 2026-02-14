@@ -1,4 +1,4 @@
-// articles.js - Script pour la page de liste des articles (réutilise app.js)
+// home.js - Script pour la page d'accueil
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getFirestore, collection, getDocs, query, orderBy, limit, where, addDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
@@ -18,25 +18,12 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// Variables globales
-let allArticles = [];
-let filteredArticles = [];
-let currentPage = 1;
-const articlesPerPage = 9; // 9 articles par page au lieu de 6
 let currentUser = null;
 
 // Détection environnement
 const isLocalDev = window.location.hostname === 'localhost' || 
                    window.location.hostname === '127.0.0.1' ||
                    window.location.port === '5500';
-
-// Éléments DOM
-const articlesGrid = document.getElementById('articlesGrid');
-const searchInput = document.getElementById('searchInput');
-const sortSelect = document.getElementById('sortSelect');
-const filterBtns = document.querySelectorAll('.filter-btn');
-const pagination = document.getElementById('pagination');
-const popularArticles = document.getElementById('popularArticles');
 
 // ============================================
 // GESTION AUTHENTIFICATION
@@ -108,57 +95,65 @@ document.getElementById('logoutBtn')?.addEventListener('click', async () => {
 });
 
 // ============================================
-// CHARGEMENT DES ARTICLES
+// CHARGEMENT DES DERNIERS ARTICLES
 // ============================================
-async function loadArticles() {
+async function loadLatestArticles() {
+    const container = document.getElementById('latestArticles');
+    
     try {
-        articlesGrid.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i><p>Chargement...</p></div>';
-
-        const q = query(collection(db, 'articles'), orderBy('createdAt', 'desc'));
+        const q = query(
+            collection(db, 'articles'), 
+            orderBy('createdAt', 'desc'), 
+            limit(6)
+        );
         const snapshot = await getDocs(q);
 
-        allArticles = [];
+        if (snapshot.empty) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>Aucun article disponible</p></div>';
+            return;
+        }
+
+        const articles = [];
         snapshot.forEach(doc => {
-            allArticles.push({ id: doc.id, ...doc.data() });
+            articles.push({ id: doc.id, ...doc.data() });
         });
 
-        filteredArticles = [...allArticles];
+        container.innerHTML = articles.map(article => createArticleCard(article)).join('');
         
-        // Vérifier si une catégorie est passée en paramètre URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const categoryParam = urlParams.get('category');
-        
-        if (categoryParam) {
-            filteredArticles = allArticles.filter(a => a.category === categoryParam);
-            // Activer le bon bouton de filtre
-            filterBtns.forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.category === categoryParam) {
-                    btn.classList.add('active');
-                }
-            });
-        }
-        
-        displayArticles();
-        displayPopularArticles();
+        // Mettre à jour les stats
+        updateStats(snapshot.size);
     } catch (error) {
         console.error('Erreur chargement articles:', error);
-        articlesGrid.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Erreur de chargement</p></div>';
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Erreur de chargement</p></div>';
     }
 }
 
-function displayArticles() {
-    const start = (currentPage - 1) * articlesPerPage;
-    const end = start + articlesPerPage;
-    const articlesToShow = filteredArticles.slice(start, end);
-
-    if (articlesToShow.length === 0) {
-        articlesGrid.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>Aucun article trouvé</p></div>';
-        return;
+// ============================================
+// MISE À JOUR DES STATISTIQUES
+// ============================================
+async function updateStats(latestCount) {
+    try {
+        // Compter tous les articles
+        const allArticlesSnapshot = await getDocs(collection(db, 'articles'));
+        const totalArticles = allArticlesSnapshot.size;
+        
+        // Mettre à jour l'affichage
+        const statsArticlesEl = document.getElementById('statsArticles');
+        if (statsArticlesEl) {
+            statsArticlesEl.textContent = `${totalArticles}+`;
+        }
+        
+        // On pourrait aussi compter les utilisateurs de la newsletter
+        const newsletterSnapshot = await getDocs(collection(db, 'newsletter'));
+        const totalUsers = newsletterSnapshot.size;
+        
+        const statsUsersEl = document.getElementById('statsUsers');
+        if (statsUsersEl && totalUsers > 0) {
+            statsUsersEl.textContent = `${totalUsers}+`;
+        }
+    } catch (error) {
+        console.error('Erreur mise à jour stats:', error);
     }
-
-    articlesGrid.innerHTML = articlesToShow.map(article => createArticleCard(article)).join('');
-    displayPagination();
 }
 
 function createArticleCard(article) {
@@ -171,10 +166,10 @@ function createArticleCard(article) {
     const imgUrl = article.imageUrl || 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800';
     const categoryClass = getCategoryClass(article.category);
 
-    // URL vers la page détail
-    const articleUrl = isLocalDev 
-        ? `article-detail.html?id=${article.id}`
-        : (article.slug ? `article/${article.slug}` : `article-detail.html?id=${article.id}`);
+    // URL avec slug si disponible, sinon fallback avec ID
+    const articleUrl = article.slug 
+        ? `/article/${article.slug}`
+        : `/article-detail.html?id=${article.id}`;
 
     return `
         <article class="article-card" onclick="window.location.href='${articleUrl}'">
@@ -186,7 +181,7 @@ function createArticleCard(article) {
                     <span class="article-date">${date}</span>
                 </div>
                 <h3 class="article-title">${escapeHtml(article.title)}</h3>
-                <p class="article-summary">${escapeHtml(article.summary || '')}</p>
+                <p class="article-summary">${escapeHtml(article.summary || '').substring(0, 120)}...</p>
                 <div class="article-footer">
                     <div class="article-stats">
                         <span><i class="fas fa-eye"></i> ${article.views || 0}</span>
@@ -202,175 +197,6 @@ function createArticleCard(article) {
 }
 
 // ============================================
-// PAGINATION
-// ============================================
-function displayPagination() {
-    const totalPages = Math.ceil(filteredArticles.length / articlesPerPage);
-
-    if (totalPages <= 1) {
-        pagination.classList.add('hidden');
-        return;
-    }
-
-    pagination.classList.remove('hidden');
-    pagination.innerHTML = '';
-
-    // Bouton Précédent
-    const prevBtn = document.createElement('button');
-    prevBtn.className = 'pagination-btn';
-    prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
-    prevBtn.disabled = currentPage === 1;
-    prevBtn.onclick = () => changePage(currentPage - 1);
-    pagination.appendChild(prevBtn);
-
-    // Numéros de page
-    for (let i = 1; i <= totalPages; i++) {
-        if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
-            const pageBtn = document.createElement('button');
-            pageBtn.className = `pagination-btn ${i === currentPage ? 'active' : ''}`;
-            pageBtn.textContent = i;
-            pageBtn.onclick = () => changePage(i);
-            pagination.appendChild(pageBtn);
-        } else if (i === currentPage - 2 || i === currentPage + 2) {
-            const dots = document.createElement('span');
-            dots.className = 'pagination-dots';
-            dots.textContent = '...';
-            pagination.appendChild(dots);
-        }
-    }
-
-    // Bouton Suivant
-    const nextBtn = document.createElement('button');
-    nextBtn.className = 'pagination-btn';
-    nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
-    nextBtn.disabled = currentPage === totalPages;
-    nextBtn.onclick = () => changePage(currentPage + 1);
-    pagination.appendChild(nextBtn);
-}
-
-function changePage(page) {
-    currentPage = page;
-    displayArticles();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// ============================================
-// ARTICLES POPULAIRES
-// ============================================
-async function displayPopularArticles() {
-    try {
-        const q = query(collection(db, 'articles'), orderBy('views', 'desc'), limit(5));
-        const snapshot = await getDocs(q);
-
-        popularArticles.innerHTML = snapshot.docs.map(doc => {
-            const article = { id: doc.id, ...doc.data() };
-            const imgUrl = article.imageUrl || 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400';
-            
-            const articleUrl = isLocalDev 
-                ? `article-detail.html?id=${article.id}`
-                : (article.slug ? `article/${article.slug}` : `article-detail.html?id=${article.id}`);
-            
-            return `
-                <div class="popular-article" onclick="window.location.href='${articleUrl}'">
-                    <img src="${imgUrl}" alt="${escapeHtml(article.title)}" 
-                         onerror="this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?w=400'">
-                    <div class="popular-content">
-                        <h4 class="popular-title">${escapeHtml(article.title)}</h4>
-                        <p class="popular-views"><i class="fas fa-eye"></i> ${article.views || 0} vues</p>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    } catch (error) {
-        console.error('Erreur articles populaires:', error);
-    }
-}
-
-// ============================================
-// RECHERCHE & FILTRES
-// ============================================
-function debounce(fn, delay = 300) {
-    let timer;
-    return (...args) => {
-        clearTimeout(timer);
-        timer = setTimeout(() => fn(...args), delay);
-    };
-}
-
-searchInput?.addEventListener('input', debounce((e) => {
-    const query = e.target.value.toLowerCase().trim();
-
-    if (!query) {
-        filteredArticles = [...allArticles];
-    } else {
-        filteredArticles = allArticles.filter(article =>
-            article.title.toLowerCase().includes(query) ||
-            article.summary?.toLowerCase().includes(query) ||
-            article.category.toLowerCase().includes(query)
-        );
-    }
-
-    currentPage = 1;
-    displayArticles();
-}));
-
-filterBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        filterBtns.forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-
-        const category = e.target.dataset.category;
-
-        if (category === 'all') {
-            filteredArticles = [...allArticles];
-        } else {
-            filteredArticles = allArticles.filter(a => a.category === category);
-        }
-
-        currentPage = 1;
-        displayArticles();
-        
-        // Mettre à jour l'URL
-        const url = new URL(window.location);
-        if (category === 'all') {
-            url.searchParams.delete('category');
-        } else {
-            url.searchParams.set('category', category);
-        }
-        window.history.pushState({}, '', url);
-    });
-});
-
-sortSelect?.addEventListener('change', (e) => {
-    const sortType = e.target.value;
-
-    switch (sortType) {
-        case 'date-desc':
-            filteredArticles.sort((a, b) => {
-                const dateA = a.createdAt ? a.createdAt.toDate() : new Date(0);
-                const dateB = b.createdAt ? b.createdAt.toDate() : new Date(0);
-                return dateB - dateA;
-            });
-            break;
-        case 'date-asc':
-            filteredArticles.sort((a, b) => {
-                const dateA = a.createdAt ? a.createdAt.toDate() : new Date(0);
-                const dateB = b.createdAt ? b.createdAt.toDate() : new Date(0);
-                return dateA - dateB;
-            });
-            break;
-        case 'popular':
-            filteredArticles.sort((a, b) => (b.views || 0) - (a.views || 0));
-            break;
-        case 'title':
-            filteredArticles.sort((a, b) => a.title.localeCompare(b.title));
-            break;
-    }
-
-    displayArticles();
-});
-
-// ============================================
 // NEWSLETTER
 // ============================================
 window.openNewsletterModal = function() {
@@ -382,10 +208,21 @@ window.closeNewsletterModal = function() {
     document.getElementById('newsletterForm').reset();
 };
 
+// Newsletter modal
 document.getElementById('newsletterForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = document.getElementById('newsletterEmail').value.trim();
+    await subscribeNewsletter(document.getElementById('newsletterEmail').value);
+});
 
+// Newsletter inline (page d'accueil)
+document.getElementById('newsletterFormHome')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    await subscribeNewsletter(document.getElementById('newsletterEmailHome').value);
+});
+
+async function subscribeNewsletter(email) {
+    email = email.trim();
+    
     try {
         const emailDoc = await getDocs(query(collection(db, 'newsletter'), where('email', '==', email)));
 
@@ -402,11 +239,14 @@ document.getElementById('newsletterForm')?.addEventListener('submit', async (e) 
 
         showNotification('Merci pour votre inscription ! 🎉', 'success');
         closeNewsletterModal();
+        
+        // Reset form
+        document.getElementById('newsletterEmailHome').value = '';
     } catch (error) {
         console.error('Erreur inscription newsletter:', error);
         showNotification('Erreur lors de l\'inscription', 'error');
     }
-});
+}
 
 // ============================================
 // UTILITAIRES
@@ -490,4 +330,6 @@ document.addEventListener('click', (e) => {
 // ============================================
 // INITIALISATION
 // ============================================
-document.addEventListener('DOMContentLoaded', loadArticles);
+document.addEventListener('DOMContentLoaded', () => {
+    loadLatestArticles();
+});

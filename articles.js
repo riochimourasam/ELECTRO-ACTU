@@ -171,10 +171,10 @@ function createArticleCard(article) {
     const imgUrl = article.imageUrl || 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800';
     const categoryClass = getCategoryClass(article.category);
 
-    // URL vers la page détail
-    const articleUrl = isLocalDev 
-        ? `article-detail.html?id=${article.id}`
-        : (article.slug ? `article/${article.slug}` : `article-detail.html?id=${article.id}`);
+    // URL avec slug si disponible, sinon fallback avec ID
+    const articleUrl = article.slug 
+        ? `/article/${article.slug}`
+        : `/article-detail.html?id=${article.id}`;
 
     return `
         <article class="article-card" onclick="window.location.href='${articleUrl}'">
@@ -266,9 +266,10 @@ async function displayPopularArticles() {
             const article = { id: doc.id, ...doc.data() };
             const imgUrl = article.imageUrl || 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400';
             
-            const articleUrl = isLocalDev 
-                ? `article-detail.html?id=${article.id}`
-                : (article.slug ? `article/${article.slug}` : `article-detail.html?id=${article.id}`);
+            // URL avec slug si disponible
+            const articleUrl = article.slug 
+                ? `/article/${article.slug}`
+                : `/article-detail.html?id=${article.id}`;
             
             return `
                 <div class="popular-article" onclick="window.location.href='${articleUrl}'">

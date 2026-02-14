@@ -1,0 +1,106 @@
+# .htaccess - Configuration pour URLs propres avec slugs
+# À placer à la racine du site
+
+# Activer la réécriture d'URL
+RewriteEngine On
+RewriteBase /
+
+# ============================================
+# REDIRECTION HTTPS (Sécurité)
+# ============================================
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ============================================
+# SLUGS - Réécriture pour articles
+# ============================================
+
+# Rediriger l'ancienne URL vers la nouvelle avec slug
+# article-detail.html?id=xxx → /article/slug (si le slug existe)
+RewriteCond %{QUERY_STRING} ^id=([a-zA-Z0-9]+)$
+RewriteRule ^article-detail\.html$ /article/%1? [R=301,L]
+
+# Réécrire /article/mon-slug vers article-detail.html en interne
+# L'utilisateur voit : /article/mon-slug
+# Le serveur charge : article-detail.html
+RewriteRule ^article/([a-z0-9-]+)/?$ article-detail.html [L,QSA]
+
+# ============================================
+# CLEAN URLs - Retirer .html
+# ============================================
+
+# Redirection externe : supprimer .html de l'URL visible
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s([^.]+)\.html [NC]
+RewriteRule ^ %1 [R=301,L]
+
+# Réécriture interne : ajouter .html pour charger le fichier
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.html -f
+RewriteRule ^(.*)$ $1.html [L]
+
+# ============================================
+# PAGES SPÉCIFIQUES
+# ============================================
+
+# /articles → articles.html
+RewriteRule ^articles/?$ articles.html [L,QSA]
+
+# /courses → courses.html
+RewriteRule ^courses/?$ courses.html [L,QSA]
+
+# /about → about.html
+RewriteRule ^about/?$ about.html [L,QSA]
+
+# /contact → contact.html
+RewriteRule ^contact/?$ contact.html [L,QSA]
+
+# ============================================
+# CACHE ET PERFORMANCES
+# ============================================
+
+# Cache pour les images
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
+
+# Compression GZIP
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# ============================================
+# SÉCURITÉ
+# ============================================
+
+# Empêcher l'affichage des répertoires
+Options -Indexes
+
+# Protéger les fichiers sensibles
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|sql|md)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Protection contre les injections
+<IfModule mod_rewrite.c>
+    RewriteCond %{QUERY_STRING} (<|%3C).*script.*(>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} GLOBALS(=|[|%[0-9A-Z]{0,2}) [OR]
+    RewriteCond %{QUERY_STRING} _REQUEST(=|[|%[0-9A-Z]{0,2})
+    RewriteRule ^(.*)$ index.html [F,L]
+</IfModule>
+
+# ============================================
+# PAGES D'ERREUR PERSONNALISÉES
+# ============================================
+
+ErrorDocument 404 /404.html
+ErrorDocument 403 /403.html
+ErrorDocument 500 /500.html

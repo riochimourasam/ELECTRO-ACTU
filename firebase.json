@@ -1,23 +1,50 @@
 {
   "hosting": {
-    "public": ".",
+    "public": "public",
+    "cleanUrls": true,
+    "trailingSlash": false,
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**",
-      ".git/**",
-      ".github/**"
+      "**/node_modules/**"
     ],
     "rewrites": [
       {
-        "source": "/article/**",
-        "destination": "/article.html"
+        "source": "/article/:slug",
+        "destination": "/article-detail.html"
+      },
+      {
+        "source": "/articles",
+        "destination": "/articles.html"
+      },
+      {
+        "source": "/courses",
+        "destination": "/courses.html"
+      },
+      {
+        "source": "/about",
+        "destination": "/about.html"
+      },
+      {
+        "source": "/contact",
+        "destination": "/contact.html"
       }
     ],
-    "cleanUrls": true,
+    "redirects": [
+      {
+        "source": "/article.html",
+        "destination": "/articles",
+        "type": 301
+      },
+      {
+        "source": "/article-detail.html",
+        "destination": "/articles",
+        "type": 301
+      }
+    ],
     "headers": [
       {
-        "source": "**/*.@(jpg|jpeg|gif|png|svg|webp)",
+        "source": "**/*.@(jpg|jpeg|gif|png|webp|svg)",
         "headers": [
           {
             "key": "Cache-Control",
@@ -26,11 +53,20 @@
         ]
       },
       {
-        "source": "**/*.@(js|css)",
+        "source": "**/*.@(css|js)",
         "headers": [
           {
             "key": "Cache-Control",
-            "value": "max-age=604800"
+            "value": "max-age=2592000"
+          }
+        ]
+      },
+      {
+        "source": "**/*.@(html)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=3600"
           }
         ]
       }

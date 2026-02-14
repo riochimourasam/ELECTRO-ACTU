@@ -1,9 +1,23 @@
 {
+  "name": "electroinfo-local-server",
+  "version": "1.0.0",
+  "description": "Serveur local pour tester les slugs d'Electroinfo",
+  "main": "server-local.js",
+  "scripts": {
+    "start": "node server-local.js",
+    "dev": "nodemon server-local.js"
+  },
+  "keywords": [
+    "electroinfo",
+    "slugs",
+    "local-server"
+  ],
+  "author": "Electroinfo",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
   "devDependencies": {
-<<<<<<< HEAD
-    "firebase-tools": "^15.5.1"
-=======
-    "firebase-tools": "^15.6.0"
->>>>>>> b9b29874d6870123dff8b09de1f0904612a22cd5
+    "nodemon": "^3.0.2"
   }
 }
