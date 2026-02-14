@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Electroinfo | Votre portail d'expertise en électricité industrielle</title>
-    <meta name="description" content="Electroinfo : votre portail d'actualités en électricité industrielle et cours complets pour BAC PRO, BEP, CAP, BTS et Licence au Togo.">
-    <meta name="keywords" content="électricité, cours électricité Togo, actualités électricité, formation électrique">
-    <meta name="author" content="Electroinfo">
+
+    <!-- ✅ TITRE & DESCRIPTION optimisés pour Google -->
+    <title>ElectroInfo — Actualités & Cours d'Électricité Industrielle au Togo</title>
+    <meta name="description" content="ElectroInfo : actualités, articles et cours d'électricité industrielle pour BAC PRO, BEP, CAP, BTS et Licence au Togo. Innovations, sécurité, domotique et tutoriels pratiques.">
+    <meta name="keywords" content="électricité industrielle, cours électricité Togo, actualités électricité, BAC PRO électricité, BTS électrotechnique, BEP électricité, CAP électricité, innovations électriques, sécurité électrique, ElectroInfo">
+    <meta name="author" content="ElectroInfo">
+    <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://electroinfo.online/">
 
     <!-- Favicons -->
@@ -16,25 +18,100 @@
     <link rel="icon" type="image/png" sizes="512x512" href="/images/logo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
 
-    <!-- Open Graph -->
+    <!-- ✅ Open Graph complet -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Electroinfo | Portail d'expertise en électricité">
-    <meta property="og:description" content="Actualités, cours et ressources en électricité industrielle">
+    <meta property="og:title" content="ElectroInfo — Actualités & Cours d'Électricité Industrielle au Togo">
+    <meta property="og:description" content="Votre portail d'expertise en électricité industrielle. Articles, cours et ressources pour BAC PRO, BEP, CAP, BTS et Licence au Togo.">
     <meta property="og:image" content="https://electroinfo.online/images/logo.png">
     <meta property="og:url" content="https://electroinfo.online/">
-    
-    <!-- Twitter Card -->
+    <meta property="og:site_name" content="ElectroInfo">
+    <meta property="og:locale" content="fr_FR">
+
+    <!-- ✅ Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Electroinfo | Portail d'expertise en électricité">
-    <meta name="twitter:description" content="Actualités, cours et ressources en électricité industrielle">
+    <meta name="twitter:title" content="ElectroInfo — Actualités & Cours d'Électricité Industrielle">
+    <meta name="twitter:description" content="Actualités, articles et cours d'électricité industrielle. BAC PRO, BTS, BEP, CAP, Licence au Togo.">
     <meta name="twitter:image" content="https://electroinfo.online/images/logo.png">
+
+    <!-- ✅ JSON-LD : Organisation -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "ElectroInfo",
+      "url": "https://electroinfo.online",
+      "logo": "https://electroinfo.online/images/logo.png",
+      "description": "Portail d'actualités et de cours d'électricité industrielle au Togo",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "url": "https://electroinfo.online/contact.html"
+      }
+    }
+    </script>
+
+    <!-- ✅ JSON-LD : WebSite (active la barre de recherche Google) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "ElectroInfo",
+      "url": "https://electroinfo.online",
+      "description": "Actualités et cours d'électricité industrielle pour professionnels et étudiants au Togo",
+      "inLanguage": "fr",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://electroinfo.online/articles.html?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- ✅ JSON-LD : Contenu statique lisible par Google même sans JS -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Sections principales d'ElectroInfo",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Actualités électricité industrielle",
+          "url": "https://electroinfo.online/articles.html",
+          "description": "Les dernières actualités, innovations et tutoriels en électricité industrielle"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Cours d'électricité BAC PRO, BEP, CAP, BTS, Licence",
+          "url": "https://electroinfo.online/courses.html",
+          "description": "Cours complets d'électricité pour toutes les formations professionnelles au Togo"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Tutoriels pratiques électricité",
+          "url": "https://electroinfo.online/articles.html?category=TUTO",
+          "description": "Guides pratiques et tutoriels pour maîtriser les techniques électriques"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "Sécurité électrique et normes",
+          "url": "https://electroinfo.online/articles.html?category=SÉCURITÉ",
+          "description": "Normes, réglementations et bonnes pratiques de sécurité électrique"
+        }
+      ]
+    }
+    </script>
 
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
+
     <style>
-        /* Styles spécifiques à la page d'accueil */
+        /* Hero */
         .hero-home {
             background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%);
             min-height: 80vh;
@@ -47,47 +124,38 @@
             position: relative;
             overflow: hidden;
         }
-        
         .hero-home::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,144C960,149,1056,139,1152,128C1248,117,1344,107,1392,101.3L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
             background-size: cover;
             background-position: bottom;
             opacity: 0.3;
         }
-        
         .hero-content {
             position: relative;
             z-index: 1;
             max-width: 800px;
         }
-        
         .hero-home h1 {
             font-size: clamp(2.5rem, 5vw, 4rem);
             font-weight: 800;
             margin-bottom: 1.5rem;
             line-height: 1.2;
         }
-        
         .hero-home .subtitle {
             font-size: clamp(1.1rem, 2vw, 1.5rem);
             margin-bottom: 2.5rem;
             opacity: 0.95;
             line-height: 1.6;
         }
-        
         .hero-cta {
             display: flex;
             gap: 1rem;
             justify-content: center;
             flex-wrap: wrap;
         }
-        
         .hero-cta .btn {
             padding: 1rem 2rem;
             font-size: 1.1rem;
@@ -95,33 +163,28 @@
             border-radius: 0.5rem;
             transition: all 0.3s ease;
         }
-        
         .btn-hero-primary {
             background: white;
             color: #1e40af;
         }
-        
         .btn-hero-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
-        
         .btn-hero-secondary {
             background: rgba(255,255,255,0.2);
             color: white;
             border: 2px solid white;
         }
-        
         .btn-hero-secondary:hover {
             background: rgba(255,255,255,0.3);
         }
-        
-        /* Section Features */
+
+        /* Features */
         .features-section {
             padding: 4rem 1rem;
             background: #f9fafb;
         }
-        
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -129,7 +192,6 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        
         .feature-card {
             background: white;
             padding: 2rem;
@@ -139,12 +201,10 @@
             transition: all 0.3s ease;
             cursor: pointer;
         }
-        
         .feature-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
-        
         .feature-icon {
             width: 80px;
             height: 80px;
@@ -157,41 +217,35 @@
             font-size: 2rem;
             color: white;
         }
-        
         .feature-card h3 {
             font-size: 1.5rem;
             margin-bottom: 1rem;
             color: #1e293b;
         }
-        
         .feature-card p {
             color: #64748b;
             line-height: 1.6;
         }
-        
-        /* Section Latest Articles */
+
+        /* Latest Articles */
         .latest-articles-section {
             padding: 4rem 1rem;
             background: white;
         }
-        
         .section-header {
             text-align: center;
             max-width: 700px;
             margin: 0 auto 3rem;
         }
-        
         .section-header h2 {
             font-size: clamp(2rem, 4vw, 3rem);
             color: #1e293b;
             margin-bottom: 1rem;
         }
-        
         .section-header p {
             font-size: 1.1rem;
             color: #64748b;
         }
-        
         .articles-preview {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -199,36 +253,31 @@
             max-width: 1200px;
             margin: 0 auto 2rem;
         }
-        
         .view-all-container {
             text-align: center;
             margin-top: 3rem;
         }
-        
-        /* Section CTA */
+
+        /* CTA */
         .cta-section {
             padding: 4rem 1rem;
             background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%);
             color: white;
             text-align: center;
         }
-        
         .cta-content {
             max-width: 700px;
             margin: 0 auto;
         }
-        
         .cta-section h2 {
             font-size: clamp(2rem, 4vw, 3rem);
             margin-bottom: 1rem;
         }
-        
         .cta-section p {
             font-size: 1.2rem;
             margin-bottom: 2rem;
             opacity: 0.95;
         }
-        
         .newsletter-form-inline {
             display: flex;
             gap: 1rem;
@@ -236,7 +285,6 @@
             margin: 0 auto;
             flex-wrap: wrap;
         }
-        
         .newsletter-form-inline input {
             flex: 1;
             min-width: 250px;
@@ -245,7 +293,6 @@
             border: none;
             font-size: 1rem;
         }
-        
         .newsletter-form-inline button {
             padding: 1rem 2rem;
             background: white;
@@ -256,41 +303,33 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
-        
         .newsletter-form-inline button:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-        
+
         @media (max-width: 768px) {
-            .hero-cta {
-                flex-direction: column;
-            }
-            
-            .newsletter-form-inline {
-                flex-direction: column;
-            }
-            
+            .hero-cta { flex-direction: column; }
+            .newsletter-form-inline { flex-direction: column; }
             .newsletter-form-inline input,
-            .newsletter-form-inline button {
-                width: 100%;
-            }
+            .newsletter-form-inline button { width: 100%; }
         }
     </style>
 </head>
 <body>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
             <div class="nav-brand">
-                <img src="images/logo-small.png" alt="Logo Electroinfo" class="nav-logo">
+                <img src="images/logo-small.png" alt="Logo ElectroInfo" class="nav-logo">
                 <span>ELECTROINFO</span>
             </div>
-            
+
             <button class="mobile-toggle" id="mobileToggle">
                 <i class="fas fa-bars"></i>
             </button>
-            
+
             <div class="nav-menu" id="mobileMenu">
                 <div class="nav-links">
                     <a href="index.html" class="nav-link active">Accueil</a>
@@ -305,7 +344,7 @@
                         <i class="fas fa-sign-in-alt"></i>
                         <span class="btn-text">Connexion</span>
                     </a>
-                    
+
                     <!-- Connecté -->
                     <div id="userMenu" class="user-menu hidden">
                         <button class="user-btn" id="userMenuToggle">
@@ -325,7 +364,7 @@
                             <a href="profile.html" class="dropdown-item">
                                 <i class="fas fa-user"></i> Mon profil
                             </a>
-                            <div class="dropdown-divider" id="adminDivider" class="hidden"></div>
+                            <div class="dropdown-divider hidden" id="adminDivider"></div>
                             <a href="admin/admin.html" class="dropdown-item hidden" id="adminLink">
                                 <i class="fas fa-cog"></i> Administration
                             </a>
@@ -340,12 +379,27 @@
         </div>
     </nav>
 
+    <!-- ✅ Contenu statique lisible par Google (invisible visuellement) -->
+    <div style="position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0);" aria-hidden="true">
+        <h1>ElectroInfo — Actualités et Cours d'Électricité Industrielle</h1>
+        <p>ElectroInfo est votre portail d'expertise en électricité industrielle au Togo. Nous proposons des actualités, des articles techniques et des cours complets pour les formations BAC PRO, BEP, CAP, BTS et Licence en électricité et électrotechnique.</p>
+        <nav>
+            <a href="/articles.html">Articles et actualités électricité</a>
+            <a href="/courses.html">Cours d'électricité BAC PRO, BEP, CAP, BTS, Licence</a>
+            <a href="/articles.html?category=TUTO">Tutoriels pratiques électricité</a>
+            <a href="/articles.html?category=SÉCURITÉ">Sécurité électrique et normes</a>
+            <a href="/articles.html?category=INNOVATION">Innovations en électricité industrielle</a>
+            <a href="/about.html">À propos d'ElectroInfo</a>
+            <a href="/contact.html">Contact</a>
+        </nav>
+    </div>
+
     <!-- Hero Section -->
     <section class="hero-home">
         <div class="hero-content">
             <h1>
                 <i class="fas fa-bolt" style="color: #fbbf24;"></i><br>
-                Bienvenue sur Electroinfo
+                Bienvenue sur ElectroInfo
             </h1>
             <p class="subtitle">
                 Votre portail d'expertise en électricité industrielle.<br>
@@ -369,52 +423,40 @@
                 <h2>Ce que nous proposons</h2>
                 <p>Tout ce dont vous avez besoin pour exceller dans le domaine de l'électricité</p>
             </div>
-            
+
             <div class="features-grid">
                 <div class="feature-card" onclick="window.location.href='articles.html'">
-                    <div class="feature-icon">
-                        <i class="fas fa-newspaper"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-newspaper"></i></div>
                     <h3>Actualités</h3>
                     <p>Les dernières innovations et tendances en électricité industrielle, mises à jour régulièrement.</p>
                 </div>
-                
+
                 <div class="feature-card" onclick="window.location.href='courses.html'">
-                    <div class="feature-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-graduation-cap"></i></div>
                     <h3>Cours Complets</h3>
                     <p>Formations pour BAC PRO, BEP, CAP, BTS et Licence en électricité et électrotechnique.</p>
                 </div>
-                
+
                 <div class="feature-card" onclick="window.location.href='articles.html?category=TUTO'">
-                    <div class="feature-icon">
-                        <i class="fas fa-tools"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-tools"></i></div>
                     <h3>Tutoriels</h3>
                     <p>Guides pratiques et tutoriels détaillés pour maîtriser les techniques électriques.</p>
                 </div>
-                
+
                 <div class="feature-card" onclick="window.location.href='articles.html?category=SÉCURITÉ'">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
                     <h3>Sécurité</h3>
                     <p>Normes, réglementations et bonnes pratiques pour travailler en toute sécurité.</p>
                 </div>
-                
+
                 <div class="feature-card" onclick="openNewsletterModal()">
-                    <div class="feature-icon">
-                        <i class="fas fa-envelope"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-envelope"></i></div>
                     <h3>Newsletter</h3>
                     <p>Recevez les derniers articles et actualités directement dans votre boîte mail.</p>
                 </div>
-                
+
                 <div class="feature-card" onclick="window.location.href='about.html'">
-                    <div class="feature-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-users"></i></div>
                     <h3>Communauté</h3>
                     <p>Rejoignez une communauté de passionnés et professionnels de l'électricité.</p>
                 </div>
@@ -429,14 +471,14 @@
                 <h2>Derniers Articles</h2>
                 <p>Découvrez nos publications les plus récentes</p>
             </div>
-            
+
             <div id="latestArticles" class="articles-preview">
                 <div class="loading">
                     <i class="fas fa-spinner fa-spin"></i>
                     <p>Chargement des articles...</p>
                 </div>
             </div>
-            
+
             <div class="view-all-container">
                 <a href="articles.html" class="btn btn-primary btn-lg">
                     <i class="fas fa-th"></i> Voir tous les articles
@@ -465,11 +507,10 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h3 class="footer-title">
-                        <i class="fas fa-bolt"></i>
-                        Electroinfo
+                        <i class="fas fa-bolt"></i> Electroinfo
                     </h3>
                     <p class="footer-description">
-                        Votre portail d'expertise en électricité et électronique. 
+                        Votre portail d'expertise en électricité et électronique.
                         Nous parlons volt, ampère et watt sans concession.
                     </p>
                     <div class="social-links">
@@ -479,7 +520,7 @@
                         <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4 class="footer-subtitle">Navigation</h4>
                     <ul class="footer-links">
@@ -490,7 +531,7 @@
                         <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4 class="footer-subtitle">Ressources</h4>
                     <ul class="footer-links">
@@ -500,7 +541,7 @@
                         <li><a href="archives.html">Archives</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4 class="footer-subtitle">Informations Légales</h4>
                     <ul class="footer-links">
@@ -511,7 +552,7 @@
                     </ul>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
                 <p>&copy; 2025 Electroinfo. Tous droits réservés.</p>
                 <p class="footer-credit">
