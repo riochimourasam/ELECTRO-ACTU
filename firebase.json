@@ -1,13 +1,14 @@
 {
   "hosting": {
-    "public": "public",
-    "cleanUrls": true,
-    "trailingSlash": false,
+    "public": ".",
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "*.json"
     ],
+    "cleanUrls": true,
+    "trailingSlash": false,
     "rewrites": [
       {
         "source": "/article/:slug",
@@ -28,18 +29,10 @@
       {
         "source": "/contact",
         "destination": "/contact.html"
-      }
-    ],
-    "redirects": [
-      {
-        "source": "/article.html",
-        "destination": "/articles",
-        "type": 301
       },
       {
-        "source": "/article-detail.html",
-        "destination": "/articles",
-        "type": 301
+        "source": "**",
+        "destination": "/index.html"
       }
     ],
     "headers": [
