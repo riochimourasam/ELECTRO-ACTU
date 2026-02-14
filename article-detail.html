@@ -3,36 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Titre et description (seront mis à jour dynamiquement) -->
+
+    <!-- Titre et description (mis à jour dynamiquement par JS) -->
     <title>Article | ElectroInfo</title>
     <meta name="description" content="Découvrez les dernières innovations en électricité industrielle">
-    
+
     <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <link rel="icon" type="image/png" sizes="48x48" href="/images/logo-small.png">
     <link rel="icon" type="image/png" sizes="512x512" href="/images/logo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
 
-    <!-- Open Graph (Facebook, LinkedIn, WhatsApp) -->
+    <!-- Open Graph -->
     <meta property="og:title" content="Article | ElectroInfo">
     <meta property="og:description" content="Découvrez les dernières innovations en électricité industrielle">
     <meta property="og:image" content="https://electroinfo.online/images/logo.png">
     <meta property="og:url" content="https://electroinfo.online">
     <meta property="og:type" content="article">
-    
+
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Article | ElectroInfo">
     <meta name="twitter:description" content="Découvrez les dernières innovations en électricité industrielle">
     <meta name="twitter:image" content="https://electroinfo.online/images/logo.png">
-    
-    <!-- Styles - CHEMINS ABSOLUS OBLIGATOIRES -->
+
+    <!-- Styles -->
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="/article-styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
@@ -40,30 +41,16 @@
                 <img src="/images/logo-small.png" alt="Logo ElectroInfo" class="nav-logo">
                 <span>ELECTROINFO</span>
             </div>
-            
-            <!-- Menu Desktop -->
+
             <div class="nav-menu" id="navMenu">
-                <a href="/index.html" class="nav-link">
-                    <i class="fas fa-home"></i> Accueil
-                </a>
-                <a href="/articles.html" class="nav-link">
-                    <i class="fas fa-newspaper"></i> Articles
-                </a>
-                <a href="/courses.html" class="nav-link">
-                    <i class="fas fa-graduation-cap"></i> Cours
-                </a>
-                <a href="/about.html" class="nav-link">
-                    <i class="fas fa-info-circle"></i> À propos
-                </a>
-                <a href="/contact.html" class="nav-link">
-                    <i class="fas fa-envelope"></i> Contact
-                </a>
-                <a href="/auth.html" class="nav-link">
-                    <i class="fas fa-user"></i> Connexion
-                </a>
+                <a href="/index.html" class="nav-link"><i class="fas fa-home"></i> Accueil</a>
+                <a href="/articles.html" class="nav-link"><i class="fas fa-newspaper"></i> Articles</a>
+                <a href="/courses.html" class="nav-link"><i class="fas fa-graduation-cap"></i> Cours</a>
+                <a href="/about.html" class="nav-link"><i class="fas fa-info-circle"></i> À propos</a>
+                <a href="/contact.html" class="nav-link"><i class="fas fa-envelope"></i> Contact</a>
+                <a href="/auth.html" class="nav-link"><i class="fas fa-user"></i> Connexion</a>
             </div>
-            
-            <!-- Actions -->
+
             <div class="nav-actions">
                 <button id="themeToggle" class="btn-icon" aria-label="Changer le thème" title="Changer le thème">
                     <i class="fas fa-moon"></i>
@@ -97,6 +84,7 @@
 
     <!-- Article Container -->
     <main id="articleContainer" class="article-page hidden">
+
         <!-- Article Hero -->
         <div class="article-hero">
             <img id="articleImage" src="" alt="" class="article-hero-image">
@@ -132,8 +120,8 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Share Buttons -->
+
+                    <!-- Boutons de partage -->
                     <div class="share-buttons">
                         <button onclick="copyLink()" class="share-btn" title="Copier le lien">
                             <i class="fas fa-link"></i>
@@ -154,14 +142,14 @@
 
         <!-- Article Content -->
         <div class="article-container">
-            <!-- Main Content Column (Full Width) -->
             <div class="article-main-content-full">
-                <!-- Article Body - PRIORITÉ #1 : LECTURE D'ABORD -->
+
+                <!-- Corps de l'article -->
                 <div id="articleContent" class="article-body">
-                    <!-- Le contenu sera injecté ici par JavaScript -->
+                    <!-- Injecté par JavaScript -->
                 </div>
-                
-                <!-- Reactions Bar - APRÈS la lecture de l'article -->
+
+                <!-- Réactions -->
                 <div class="article-actions-bar">
                     <div class="reactions-container">
                         <button class="reaction-btn" data-reaction="like">
@@ -182,25 +170,24 @@
                         </button>
                     </div>
                 </div>
-                
-                <!-- Tags Section -->
+
+                <!-- Tags -->
                 <div class="article-tags-section">
                     <h3 class="tags-section-title">
                         <i class="fas fa-tags"></i> Tags
                     </h3>
                     <div id="tagsContainer" class="tags-list">
-                        <!-- Les tags seront injectés ici -->
+                        <!-- Injecté par JavaScript -->
                     </div>
                 </div>
-                
-                <!-- Comments Section -->
+
+                <!-- Commentaires -->
                 <div class="comments-section">
                     <h3 class="comments-title">
-                        <i class="fas fa-comments"></i> 
+                        <i class="fas fa-comments"></i>
                         Commentaires (<span id="commentsCount">0</span>)
                     </h3>
-                    
-                    <!-- Comment Form -->
+
                     <form id="commentForm" class="comment-form">
                         <div class="form-row">
                             <div class="form-group">
@@ -217,12 +204,12 @@
                             <i class="fas fa-paper-plane"></i> Publier
                         </button>
                     </form>
-                    
-                    <!-- Comments List -->
+
                     <div id="commentsList" class="comments-list">
-                        <!-- Les commentaires seront injectés ici -->
+                        <!-- Injecté par JavaScript -->
                     </div>
                 </div>
+
             </div>
         </div>
     </main>
@@ -230,9 +217,9 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <!-- Section Newsletter et Articles Similaires -->
+
+            <!-- Newsletter + Articles similaires -->
             <div class="footer-widgets">
-                <!-- Newsletter Box -->
                 <div class="footer-widget newsletter-widget">
                     <div class="newsletter-icon">
                         <i class="fas fa-envelope"></i>
@@ -241,21 +228,18 @@
                     <p class="footer-widget-text">Recevez les derniers articles directement dans votre boîte mail.</p>
                     <form id="newsletterForm" class="newsletter-form-footer">
                         <input type="email" id="newsletterEmail" placeholder="votre@email.fr" required class="input">
-                        <button type="submit" class="btn btn-primary btn-block">
-                            S'abonner
-                        </button>
+                        <button type="submit" class="btn btn-primary btn-block">S'abonner</button>
                     </form>
                 </div>
-                
-                <!-- Related Articles -->
+
                 <div class="footer-widget related-widget">
                     <h4 class="footer-widget-title">Articles similaires</h4>
                     <div id="relatedArticles" class="related-articles-footer">
-                        <!-- Les articles connexes seront injectés ici -->
+                        <!-- Injecté par JavaScript -->
                     </div>
                 </div>
             </div>
-            
+
             <div class="footer-content">
                 <div class="footer-section">
                     <div class="footer-brand">
@@ -264,7 +248,7 @@
                     </div>
                     <p>Votre source d'actualités en électricité industrielle.</p>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4>Navigation</h4>
                     <ul class="footer-links">
@@ -276,7 +260,7 @@
                         <li><a href="/auth.html">Connexion</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4>Suivez-nous</h4>
                     <div class="social-links">
@@ -287,9 +271,9 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
-                <p>&copy; 2024 ElectroInfo. Tous droits réservés.</p>
+                <p>&copy; 2025 ElectroInfo. Tous droits réservés.</p>
             </div>
         </div>
     </footer>
@@ -309,10 +293,7 @@
         </div>
     </div>
 
-    <!-- 
-    ⚠️ CRITIQUE : Le script DOIT être chargé comme MODULE
-    Ceci permet d'utiliser les imports ES6 dans article-detail.js
-    -->
+    <!-- ⚠️ CRITIQUE : chargé en module pour les imports ES6 -->
     <script type="module" src="/article-detail.js"></script>
 </body>
 </html>
